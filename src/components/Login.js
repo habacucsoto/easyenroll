@@ -66,58 +66,79 @@ const Login = () => {
     }
   });
 
+  // Handler para mostrar/ocultar contraseña
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div>
-      <h4 className="mv3">
-        {formState.login ? 'Login' : 'Sign Up'}
-      </h4>
-      <div className="flex flex-column">
+    <div className="container">
+      <div className="header">
+        <img src="Escudo.png" alt="Logo" />
+        <h1>Inicio de Sesión</h1>
+      </div>
+      <div className="form">
+        <h2>Secundaria Instituto Patria</h2>
         {!formState.login && (
+          <div>
+            <label htmlFor="email">Correo:</label>
+            <input
+              value={formState.email}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  email: e.target.value
+                })
+              }
+              type="email"
+              id="email"
+              placeholder="example@mail.com"
+            />
+          </div>
+        )}
+        <div>
+          <label htmlFor="username">Usuario:</label>
           <input
-            value={formState.email}
+            value={formState.username}
             onChange={(e) =>
               setFormState({
                 ...formState,
-                email: e.target.value
+                username: e.target.value
               })
             }
             type="text"
-            placeholder="Your email"
+            id="username"
+            placeholder="Your username"
           />
-        )}
-        <input
-          value={formState.username}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              username: e.target.value
-            })
-          }
-          type="text"
-          placeholder="Your username"
-        />
-        <input
-          value={formState.password}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              password: e.target.value
-            })
-          }
-          type="password"
-          placeholder="Choose a safe password"
-        />
-      </div>
-      <div className="flex mt3">
+        </div>
+        <div style={{ position: 'relative' }}>
+          <label htmlFor="password">Contraseña:</label>
+          <input
+            value={formState.password}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                password: e.target.value
+              })
+            }
+            type={showPassword ? "text" : "password"}
+            id="password"
+            placeholder="Choose a safe password"
+          />
+          <span
+            className="eye-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            👁️
+          </span>
+        </div>
         <button
-          className="pointer mr2 button"
+          type="submit"
           onClick={formState.login ? login : signup}
         >
-          {formState.login ? 'login' : 'create account'}
+          {formState.login ? 'Entrar' : 'Crear cuenta'}
         </button>
         <button
-          className="pointer button"
-          onClick={(e) =>
+          type="button"
+          onClick={() =>
             setFormState({
               ...formState,
               login: !formState.login
@@ -125,8 +146,8 @@ const Login = () => {
           }
         >
           {formState.login
-            ? 'need to create an account?'
-            : 'already have an account?'}
+            ? '¿Necesitas crear una cuenta?'
+            : '¿Ya tienes una cuenta?'}
         </button>
       </div>
     </div>

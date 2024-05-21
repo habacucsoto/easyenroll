@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/index.css';
 import App from './components/App';
 import { BrowserRouter } from 'react-router-dom';
 import { setContext } from '@apollo/client/link/context';
 import { AUTH_TOKEN } from './constants';
+import './styles/index.css';
+import './styles/login.css';
 
 // 1
 import {

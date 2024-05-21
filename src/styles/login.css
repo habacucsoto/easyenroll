@@ -1,0 +1,93 @@
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo general del body */
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  /* Contenedor principal */
+  .container {
+    background-color: #002b7f;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: white;
+  }
+  
+  /* Encabezado */
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  .header img {
+    width: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  /* Formulario */
+  .form {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    color: #002b7f;
+    text-align: left;
+  }
+  
+  .form h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .form label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  
+  .form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #fbbd00;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .form button:hover {
+    background-color: #eaae00;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 30px;
+    top: 135px;
+    cursor: pointer;
+  }
+  
