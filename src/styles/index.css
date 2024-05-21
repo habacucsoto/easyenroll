@@ -1,0 +1,103 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+input {
+  max-width: 500px;
+}
+
+.gray {
+  color: #828282;
+}
+
+.orange {
+  background-color: #5a5ba7;
+}
+
+.background-gray {
+  background-color: rgb(246, 246, 239);
+}
+
+.f11 {
+  font-size: 11px;
+}
+
+.w85 {
+  width: 85%;
+}
+
+.button {
+  font-family: monospace;
+  font-size: 10pt;
+  color: black;
+  background-color: buttonface;
+  text-align: center;
+  padding: 2px 6px 3px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  cursor: pointer;
+  max-width: 250px;
+}
+
+.table-ines {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-ines th,
+.table-ines td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-ines th {
+    background-color: #0c3658;
+}
+
+.flex {
+    display: flex;
+}
+
+.pa1 {
+    padding: 1rem;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.nowrap {
+    flex-wrap: nowrap;
+}
+
+.orange {
+    background-color: rgb(212, 144, 25);
+}
+
+.black {
+    color: black;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.fw7 {
+    font-weight: 700;
+}
+
+.mr1 {
+    margin-right: 0.5rem;
+}
+
+.ml1 {
+    margin-left: 0.5rem;
+}
+
+.pointer {
+    cursor: pointer;
+}
