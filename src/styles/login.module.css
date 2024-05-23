@@ -1,0 +1,140 @@
+/* Reset de márgenes y paddings para el contenedor del login */
+.container * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo general del contenedor principal del login */
+.container {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+/* Contenedor del login */
+.loginContainer {
+  background-color: #253064;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: white;
+}
+
+/* Encabezado */
+.header {
+  margin-bottom: 20px;
+}
+
+.header img {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+}
+
+/* Formulario */
+.form {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  color: #253064;
+  text-align: left;
+}
+
+.form h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.form label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #F3BA53;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+}
+
+.form button:hover {
+  background-color: #F3BA53;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* Media Queries */
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  .header img {
+    width: 80px;
+  }
+
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
+  .form h2 {
+    font-size: 1rem;
+  }
+
+  .form input, .form button {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+/* Estilos para dispositivos de escritorio */
+@media (min-width: 769px) {
+  .loginContainer {
+    max-width: 500px;
+    padding: 30px;
+  }
+
+  .header img {
+    width: 120px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .form h2 {
+    font-size: 1.5rem;
+  }
+
+  .form input, .form button {
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+}
