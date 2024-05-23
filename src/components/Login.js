@@ -40,11 +40,11 @@ const Login = () => {
     <div className={styles.container}>
       <div className={styles.loginContainer}>
         <div className={styles.header}>
-          <img src="/Escudo.png" alt="Logo" /> {/* Ruta relativa al logo en la carpeta public */}
-          <h1>Inicio de Sesión</h1>
+          <h1>INICIO DE SESIÓN</h1>
+          <img src="/Escudo.png" alt="Logo" />
         </div>
         <div className={styles.form}>
-          <h2>Secundaria Instituto Patria</h2>
+          <h2>SECUNDARIA <br></br>INSTITUTO PATRIA</h2>
           <div>
             <label htmlFor="username">Usuario:</label>
             <input
