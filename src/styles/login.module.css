@@ -94,9 +94,22 @@
 .eyeIcon {
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 60%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Estilo para campos de entrada con error */
+.inputError {
+  color: red;
+  border: 1px solid red;
 }
 
 /* Media Queries */

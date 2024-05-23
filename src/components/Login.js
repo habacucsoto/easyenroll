@@ -21,6 +21,8 @@ const Login = () => {
     username: '',
     password: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const [login] = useMutation(LOGIN_MUTATION, {
     variables: {
@@ -30,11 +32,22 @@ const Login = () => {
     onCompleted: ({ tokenAuth }) => {
       localStorage.setItem(AUTH_TOKEN, tokenAuth.token);
       navigate('/');
+    },
+    onError: () => {
+      setErrorMessage('Verifica los datos ingresados');
     }
   });
 
-  // Handler para mostrar/ocultar contraseña
-  const [showPassword, setShowPassword] = useState(false);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormState({
+      ...formState,
+      [name]: value
+    });
+    if (errorMessage) {
+      setErrorMessage('');
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -45,40 +58,40 @@ const Login = () => {
         </div>
         <div className={styles.form}>
           <h2>SECUNDARIA <br></br>INSTITUTO PATRIA</h2>
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
           <div>
             <label htmlFor="username">Usuario:</label>
             <input
               value={formState.username}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  username: e.target.value
-                })
-              }
+              onChange={handleInputChange}
+              onFocus={() => setErrorMessage('')}
               type="text"
               id="username"
+              name="username"
               placeholder="Your username"
+              className={errorMessage ? styles.inputError : ''}
             />
           </div>
           <div style={{ position: 'relative' }}>
             <label htmlFor="password">Contraseña:</label>
             <input
               value={formState.password}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  password: e.target.value
-                })
-              }
+              onChange={handleInputChange}
+              onFocus={() => setErrorMessage('')}
               type={showPassword ? "text" : "password"}
               id="password"
+              name="password"
               placeholder="Your password"
+              className={errorMessage ? styles.inputError : ''}
             />
             <span
               className={styles.eyeIcon}
               onClick={() => setShowPassword(!showPassword)}
             >
-              👁️
+              <img
+                src={showPassword ? "/visibility-on.svg" : "/visibility-off.svg"}
+                alt="Toggle visibility"
+              />
             </span>
           </div>
           <button
