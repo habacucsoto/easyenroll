@@ -6,11 +6,13 @@ const Header = ({ text, isLoggedIn, onLogout }) => {
     const navigate = useNavigate(); // Obtener el objeto de navegación
 
     const handleLogoutClick = () => {
-        // Llama a la función de cerrar sesión cuando se hace clic en el botón de cerrar sesión
         onLogout();
-
+        // Limpiar el almacenamiento de sesión
+        sessionStorage.clear();
         // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
         navigate('/login');
+        // Refrescar la página
+        window.location.reload();
     };
 
     if (!isLoggedIn) {
