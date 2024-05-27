@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Header from "./Header";
 import NavMenu from "./NavMenu";
@@ -9,18 +9,30 @@ import { UserProvider } from '../users/UserContext';
 import UserInfo from '../users/UserInfo';
 
 const App = () => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (storedUsername && storedIsLoggedIn) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleLogin = (username) => {
     setIsLoggedIn(true);
     setUsername(username);
+    localStorage.setItem('username', username);
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
+    localStorage.removeItem('username');
+    localStorage.removeItem('isLoggedIn');
   };
 
   return (
@@ -31,9 +43,9 @@ const App = () => {
         {isLoggedIn && (
           <NavMenu
             items={[
-              { icon: "search", text: "Inscripcion", link: "/search" },
-              { icon: "home", text: "Inicio", link: "/Home" },
-              { icon: "add", text: "Tutor", link: "/create" },
+              { icon: "note_add", text: "Inscripcion", link: "/inscripcion" },
+              { icon: "home", text: "Inicio", link: "/home" },
+              { icon: "add", text: "Tutor", link: "/crear" },
             ]}
           />
         )}
@@ -43,7 +55,7 @@ const App = () => {
             <Route path="/create" element={<CreateIne />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/Home" element={<Home />} />
-          </Routes>
+          </Routes> 
         </div>
       </div>
     </UserProvider>
