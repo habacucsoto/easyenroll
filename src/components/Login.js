@@ -15,7 +15,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   const [formState, setFormState] = useState({
     username: '',
@@ -32,6 +32,7 @@ const Login = () => {
     onCompleted: ({ tokenAuth }) => {
       localStorage.setItem(AUTH_TOKEN, tokenAuth.token);
       navigate('/');
+      onLogin(formState.username); // Llama a la función onLogin aquí
     },
     onError: () => {
       setErrorMessage('Verifica los datos ingresados');
@@ -60,7 +61,7 @@ const Login = () => {
           <h2>SECUNDARIA <br></br>INSTITUTO PATRIA</h2>
           {errorMessage && <p className={styles.error}>{errorMessage}</p>}
           <div>
-            <label htmlFor="username">Usuario:</label>
+            <label htmlFor="username">Usuario</label>
             <input
               value={formState.username}
               onChange={handleInputChange}
@@ -73,7 +74,7 @@ const Login = () => {
             />
           </div>
           <div style={{ position: 'relative' }}>
-            <label htmlFor="password">Contraseña:</label>
+            <label htmlFor="password">Contraseña</label>
             <input
               value={formState.password}
               onChange={handleInputChange}
