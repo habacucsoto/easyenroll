@@ -13,8 +13,8 @@ const App = () => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const storedUsername = sessionStorage.getItem('username');
+    const storedIsLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     if (storedUsername && storedIsLoggedIn) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
@@ -24,15 +24,15 @@ const App = () => {
   const handleLogin = (username) => {
     setIsLoggedIn(true);
     setUsername(username);
-    localStorage.setItem('username', username);
-    localStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('isLoggedIn', 'true');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
-    localStorage.removeItem('username');
-    localStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('isLoggedIn');
   };
 
   return (
@@ -45,16 +45,17 @@ const App = () => {
             items={[
               { icon: "note_add", text: "Inscripcion", link: "/inscripcion" },
               { icon: "home", text: "Inicio", link: "/home" },
-              { icon: "add", text: "Tutor", link: "/crear" },
+              { icon: "person_add", text: "Tutor", link: "/tutor" },
+              { icon: "school", text: "Alumno", link: "/alumno" },
             ]}
           />
         )}
         <div className="ph3 pv1 background-gray">
           <Routes>
-            <Route path="/" element={isLoggedIn ? <Navigate to="/Home" /> : <Login onLogin={handleLogin} />} />
+            <Route path="/" element={isLoggedIn ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
             <Route path="/create" element={<CreateIne />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/Home" element={<Home />} />
+            <Route path="/home" element={<Home />} />
           </Routes> 
         </div>
       </div>
