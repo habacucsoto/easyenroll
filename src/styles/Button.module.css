@@ -1,13 +1,25 @@
-.button {
+button {
     background: none;
     border: none;
     color: white;
     cursor: pointer;
-    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    transition: background-color 0.3s ease;
 }
-.button span {
+
+.iconButton span {
     font-size: 25px;
+}
+
+.textButton {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.button:hover {
+    opacity: 0.8;
 }
