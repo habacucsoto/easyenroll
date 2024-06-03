@@ -1,14 +1,19 @@
 import React from 'react';
 import styles from '../styles/Button.module.css';
 
-const Button = ({ bg, icon, action }) => {
+const Button = ({ bg, icon, text, action }) => {
     const bgcolor = {
         backgroundColor: bg,
-        borderRadius: '20%'
-    }
+        borderRadius: '10%'
+    };
+
     return (
-        <button onClick={action} className={styles.button}>
-            <span className="material-symbols-outlined" style={bgcolor}>{icon}</span>
+        <button onClick={action} className={`${styles.button} ${icon ? styles.iconButton : styles.textButton}`} style={bgcolor}>
+            {icon ? (
+                <span className="material-symbols-outlined">{icon}</span>
+            ) : (
+                text
+            )}
         </button>
     );
 };
