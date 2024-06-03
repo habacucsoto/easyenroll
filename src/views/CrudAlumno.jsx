@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CrudView from './CrudView';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 
@@ -50,9 +51,20 @@ const CREATE_STUDENT = gql`
     }
 `;
 
+const DELETE_STUDENT = gql`
+    mutation DeleteStudent($id: Int!) {
+        deleteStudent(id: $id) {
+            id
+        }
+    }
+`;
+
 const CrudAlumno = () => {
-    const { loading, error, data } = useQuery(GET_STUDENTS);
+    const { loading, error, data, refetch } = useQuery(GET_STUDENTS);
     const [createStudent] = useMutation(CREATE_STUDENT, {
+        refetchQueries: [{ query: GET_STUDENTS }]
+    });
+    const [deleteStudent] = useMutation(DELETE_STUDENT, {
         refetchQueries: [{ query: GET_STUDENTS }]
     });
 
@@ -67,7 +79,9 @@ const CrudAlumno = () => {
         sexo: ''
     });
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [studentToDelete, setStudentToDelete] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -80,9 +94,22 @@ const CrudAlumno = () => {
     const handleAdd = async () => {
         try {
             await createStudent({ variables: formValues });
-            setIsModalOpen(false);
+            setIsCreateModalOpen(false);
         } catch (error) {
             console.error('Error al crear el alumno:', error);
+        }
+    };
+
+    const handleDelete = async () => {
+        console.log('Handle delete for ID:', studentToDelete); // Verifica el ID aquí
+        try {
+            await deleteStudent({
+                variables: { id: studentToDelete },
+            });
+            setIsDeleteModalOpen(false); // Cierra el modal después de la eliminación
+            refetch();
+        } catch (error) {
+            console.error('Error al eliminar el alumno:', error);
         }
     };
 
@@ -97,76 +124,76 @@ const CrudAlumno = () => {
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={(id) => console.log('Ver detalle de:', id)}
                 onEdit={(id) => console.log('Editar elemento con ID:', id)}
-                onDelete={(id) => console.log('Eliminar elemento con ID:', id)}
-                onAdd={() => setIsModalOpen(true)}
+                onDelete={(id) => {
+                    setStudentToDelete(id);
+                    setIsDeleteModalOpen(true);
+                }}
+                onAdd={() => setIsCreateModalOpen(true)}
                 createModal={
-                    isModalOpen && (
-                        <div>
-                            <Input
-                                placeholder="Nombre"
-                                value={formValues.nombre}
-                                onChange={handleInputChange}
-                                id="createInputNombre"
-                                name="nombre"
-                            />
-                            <Input
-                                placeholder="Apellido Paterno"
-                                value={formValues.apellidoPaterno}
-                                onChange={handleInputChange}
-                                id="createInputApellidoPaterno"
-                                name="apellidoPaterno"
-                            />
-                            <Input
-                                placeholder="Apellido Materno"
-                                value={formValues.apellidoMaterno}
-                                onChange={handleInputChange}
-                                id="createInputApellidoMaterno"
-                                name="apellidoMaterno"
-                            />
-                            <Input
-                                placeholder="Correo Institucional"
-                                value={formValues.correoInstitucional}
-                                onChange={handleInputChange}
-                                id="createInputCorreoInstitucional"
-                                name="correoInstitucional"
-                            />
-                            <Input
-                                placeholder="CURP"
-                                value={formValues.curp}
-                                onChange={handleInputChange}
-                                id="createInputCurp"
-                                name="curp"
-                            />
-                            <Input
-                                placeholder="Escuela de Procedencia"
-                                value={formValues.escuelaProcedencia}
-                                onChange={handleInputChange}
-                                id="createInputEscuelaProcedencia"
-                                name="escuelaProcedencia"
-                            />
-                            <Input
-                                placeholder="Grado y Grupo Asignado"
-                                value={formValues.gradoGrupoAsignado}
-                                onChange={handleInputChange}
-                                id="createInputGradoGrupoAsignado"
-                                name="gradoGrupoAsignado"
-                            />
-                            <Input
-                                placeholder="Sexo"
-                                value={formValues.sexo}
-                                onChange={handleInputChange}
-                                id="createInputSexo"
-                                name="sexo"
-                            />
-                            <Button bg="#00BF63" text="Crear Alumno" action={handleAdd} />
-                            <Button bg="#F3BA53" text="Cerrar" action={() => setIsModalOpen(false)} />
-                        </div>
-                    )
+                    <div>
+                        <Input
+                            placeholder="Nombre"
+                            value={formValues.nombre}
+                            onChange={handleInputChange}
+                            id="createInputNombre"
+                            name="nombre"
+                        />
+                        <Input
+                            placeholder="Apellido Paterno"
+                            value={formValues.apellidoPaterno}
+                            onChange={handleInputChange}
+                            id="createInputApellidoPaterno"
+                            name="apellidoPaterno"
+                        />
+                        <Input
+                            placeholder="Apellido Materno"
+                            value={formValues.apellidoMaterno}
+                            onChange={handleInputChange}
+                            id="createInputApellidoMaterno"
+                            name="apellidoMaterno"
+                        />
+                        <Input
+                            placeholder="Correo Institucional"
+                            value={formValues.correoInstitucional}
+                            onChange={handleInputChange}
+                            id="createInputCorreoInstitucional"
+                            name="correoInstitucional"
+                        />
+                        <Input
+                            placeholder="CURP"
+                            value={formValues.curp}
+                            onChange={handleInputChange}
+                            id="createInputCurp"
+                            name="curp"
+                        />
+                        <Input
+                            placeholder="Escuela de Procedencia"
+                            value={formValues.escuelaProcedencia}
+                            onChange={handleInputChange}
+                            id="createInputEscuelaProcedencia"
+                            name="escuelaProcedencia"
+                        />
+                        <Input
+                            placeholder="Grado y Grupo Asignado"
+                            value={formValues.gradoGrupoAsignado}
+                            onChange={handleInputChange}
+                            id="createInputGradoGrupoAsignado"
+                            name="gradoGrupoAsignado"
+                        />
+                        <Input
+                            placeholder="Sexo"
+                            value={formValues.sexo}
+                            onChange={handleInputChange}
+                            id="createInputSexo"
+                            name="sexo"
+                        />
+                        <Button bg="#00BF63" text="Crear Alumno" action={handleAdd} />
+                    </div>
                 }
                 deleteModal={
                     <div>
                         <p>¿Estás seguro que deseas eliminar este alumno?</p>
-                        <Button bg="#FF0000" text="Eliminar" action={() => console.log('Eliminar')} />
+                        <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
                     </div>
                 }
                 editModal={
@@ -195,6 +222,16 @@ const CrudAlumno = () => {
                     </div>
                 }
             />
+
+            {/* Modal para Eliminar */}
+            {isDeleteModalOpen && 
+                <Modal isOpen={isDeleteModalOpen} title="Eliminar registro" onClose={() => setIsDeleteModalOpen(false)}>
+                    <div>
+                        <p>¿Estás seguro que deseas eliminar este alumno?</p>
+                        <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                    </div>
+                </Modal>
+            }
         </div>
     );
 };
