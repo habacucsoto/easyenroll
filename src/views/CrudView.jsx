@@ -22,10 +22,19 @@ const CrudView = ({
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showReadModal, setShowReadModal] = useState(false);
+    const [selectedDeleteId, setSelectedDeleteId] = useState(null);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         onQuery(e.target.value);
+    };
+
+    const handleDeleteAction = () => {
+        if (selectedDeleteId) {
+            onDelete(selectedDeleteId);
+            setShowDeleteModal(false);
+            setSelectedDeleteId(null);
+        }
     };
 
     return (
@@ -73,7 +82,8 @@ const CrudView = ({
                                         setShowEditModal(true);
                                     }} />
                                     <Button bg="#FF0000" icon="delete" action={() => {
-                                        onDelete(item.id);
+                                        console.log('Setting selectedDeleteId:', item.id); // Verificar el ID
+                                        setSelectedDeleteId(item.id);
                                         setShowDeleteModal(true);
                                     }} />
                                 </td>
@@ -97,7 +107,10 @@ const CrudView = ({
             {/* Modal para Eliminar */}
             {deleteModal && 
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
-                    {deleteModal}
+                    <div>
+                        <p>¿Estás seguro que deseas eliminar este alumno?</p>
+                        <Button bg="#FF0000" text="Eliminar" action={handleDeleteAction} />
+                    </div>
                 </Modal>
             }
 
