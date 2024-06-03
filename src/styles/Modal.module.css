@@ -1,4 +1,3 @@
-/* Modal.module.css */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -18,6 +17,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 300px;
     max-width: 100%;
+    color: #2c3e50;
 }
 
 .modalHeader {
@@ -38,6 +38,7 @@
     border: none;
     font-size: 1.5em;
     cursor: pointer;
+    color: #2c3e50;
 }
 
 .modalBody {
@@ -60,17 +61,3 @@
     border-radius: 5px;
 }
 
-.submitButton {
-    width: 100%;
-    padding: 10px;
-    background-color: #f39c12;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-.submitButton:hover {
-    background-color: #e67e22;
-}
