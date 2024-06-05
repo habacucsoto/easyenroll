@@ -13,6 +13,11 @@ const GET_STUDENTS = gql`
             nombre
             apellidoPaterno
             apellidoMaterno
+            correoInstitucional
+            curp
+            escuelaProcedencia
+            gradoGrupoAsignado
+            sexo
         }
     }
 `;
@@ -75,6 +80,42 @@ const DELETE_STUDENT = gql`
     }
 `;
 
+const MODIFY_STUDENT = gql`
+    mutation ModifyStudent(
+        $id: Int!,
+        $nombre: String!,
+        $apellidoPaterno: String!,
+        $apellidoMaterno: String!,
+        $correoInstitucional: String!,
+        $curp: String!,
+        $escuelaProcedencia: String!,
+        $gradoGrupoAsignado: String!,
+        $sexo: String!
+    ) {
+        modifyStudent(
+            id: $id,
+            nombre: $nombre,
+            apellidoPaterno: $apellidoPaterno,
+            apellidoMaterno: $apellidoMaterno,
+            correoInstitucional: $correoInstitucional,
+            curp: $curp,
+            escuelaProcedencia: $escuelaProcedencia,
+            gradoGrupoAsignado: $gradoGrupoAsignado,
+            sexo: $sexo
+        ) {
+            id
+            nombre
+            apellidoPaterno
+            apellidoMaterno
+            correoInstitucional
+            curp
+            escuelaProcedencia
+            gradoGrupoAsignado
+            sexo
+        }
+    }
+`;
+
 const CrudAlumno = () => {
     const { loading, error, data, refetch } = useQuery(GET_STUDENTS);
     const [createStudent] = useMutation(CREATE_STUDENT, {
@@ -83,8 +124,12 @@ const CrudAlumno = () => {
     const [deleteStudent] = useMutation(DELETE_STUDENT, {
         refetchQueries: [{ query: GET_STUDENTS }]
     });
+    const [modifyStudent] = useMutation(MODIFY_STUDENT, {
+        refetchQueries: [{ query: GET_STUDENTS }]
+    });
 
     const [formValues, setFormValues] = useState({
+        id: null,
         nombre: '',
         apellidoPaterno: '',
         apellidoMaterno: '',
@@ -101,6 +146,7 @@ const CrudAlumno = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
     const [studentToView, setStudentToView] = useState(null);
+    const [studentToEdit, setStudentToEdit] = useState(null);
 
     const { loading: loadingView, data: dataView, refetch: refetchView } = useQuery(GET_STUDENT_BY_NAME, {
         variables: { nombre: studentToView },
@@ -119,6 +165,7 @@ const CrudAlumno = () => {
         try {
             await createStudent({ variables: formValues });
             setShowCreateModal(false);
+            refetch();
         } catch (error) {
             console.error('Error al crear el alumno:', error);
         }
@@ -142,6 +189,32 @@ const CrudAlumno = () => {
         refetchView();
     };
 
+    const handleEdit = async () => {
+        try {
+            await modifyStudent({ variables: formValues });
+            setShowEditModal(false);
+            refetch();
+        } catch (error) {
+            console.error('Error al modificar el alumno:', error);
+        }
+    };
+
+    const prepareEdit = (student) => {
+        setFormValues({
+            id: student.id,
+            nombre: student.nombre,
+            apellidoPaterno: student.apellidoPaterno,
+            apellidoMaterno: student.apellidoMaterno,
+            correoInstitucional: student.correoInstitucional,
+            curp: student.curp,
+            escuelaProcedencia: student.escuelaProcedencia,
+            gradoGrupoAsignado: student.gradoGrupoAsignado,
+            sexo: student.sexo
+        });
+        setStudentToEdit(student.id);
+        setShowEditModal(true);
+    };
+
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Error al cargar los datos: {error.message}</p>;
 
@@ -153,8 +226,8 @@ const CrudAlumno = () => {
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={handleView}
                 onEdit={(id) => {
-                    console.log('Editar elemento con ID:', id);
-                    setShowEditModal(true);
+                    const student = data.students.find((stu) => stu.id === id);
+                    prepareEdit(student);
                 }}
                 onDelete={(id) => {
                     setStudentToDelete(id);
@@ -373,19 +446,61 @@ const CrudAlumno = () => {
                     <div>
                         <Input
                             placeholder="Nombre"
-                            value=""
-                            onChange={(e) => console.log(e.target.value)}
+                            value={formValues.nombre}
+                            onChange={handleInputChange}
                             id="editInputNombre"
-                            name="editInputNombre"
+                            name="nombre"
                         />
                         <Input
                             placeholder="Apellido Paterno"
-                            value=""
-                            onChange={(e) => console.log(e.target.value)}
+                            value={formValues.apellidoPaterno}
+                            onChange={handleInputChange}
                             id="editInputApellidoPaterno"
-                            name="editInputApellidoPaterno"
+                            name="apellidoPaterno"
                         />
-                        <Button bg="#737373" text="Guardar Cambios" action={() => console.log('Guardar cambios')} />
+                        <Input
+                            placeholder="Apellido Materno"
+                            value={formValues.apellidoMaterno}
+                            onChange={handleInputChange}
+                            id="editInputApellidoMaterno"
+                            name="apellidoMaterno"
+                        />
+                        <Input
+                            placeholder="Correo Institucional"
+                            value={formValues.correoInstitucional}
+                            onChange={handleInputChange}
+                            id="editInputCorreoInstitucional"
+                            name="correoInstitucional"
+                        />
+                        <Input
+                            placeholder="CURP"
+                            value={formValues.curp}
+                            onChange={handleInputChange}
+                            id="editInputCurp"
+                            name="curp"
+                        />
+                        <Input
+                            placeholder="Escuela de Procedencia"
+                            value={formValues.escuelaProcedencia}
+                            onChange={handleInputChange}
+                            id="editInputEscuelaProcedencia"
+                            name="escuelaProcedencia"
+                        />
+                        <Input
+                            placeholder="Grado y Grupo Asignado"
+                            value={formValues.gradoGrupoAsignado}
+                            onChange={handleInputChange}
+                            id="editInputGradoGrupoAsignado"
+                            name="gradoGrupoAsignado"
+                        />
+                        <Input
+                            placeholder="Sexo"
+                            value={formValues.sexo}
+                            onChange={handleInputChange}
+                            id="editInputSexo"
+                            name="sexo"
+                        />
+                        <Button bg="#737373" text="Guardar Cambios" action={handleEdit} />
                     </div>
                 </Modal>
             }
