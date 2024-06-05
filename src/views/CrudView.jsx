@@ -18,10 +18,6 @@ const CrudView = ({
     readModal 
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showReadModal, setShowReadModal] = useState(false);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -39,15 +35,8 @@ const CrudView = ({
                     id="searchInput"
                     name="searchInput"
                 />
-                <Button bg="#00BF63" icon="add" action={() => setShowCreateModal(true)} />
+                <Button bg="#00BF63" icon="add" action={onAdd} />
             </div>
-
-            {/* Modal para Crear */}
-            {createModal && 
-                <Modal isOpen={showCreateModal} title="Crear registro" onClose={() => setShowCreateModal(false)}>
-                    {createModal}
-                </Modal>
-            }
 
             <table className={styles.table}>
                 <thead>
@@ -64,18 +53,9 @@ const CrudView = ({
                                 <td>{item.id}</td>
                                 <td>{item.nombre ? (item.nombre + ' ' + item.apellidoPaterno + ' ' + item.apellidoMaterno) : item.nombrePadreTutor}</td>
                                 <td className={styles.actionButtons}>
-                                    <Button bg="#F3BA53" icon="visibility" action={() => {
-                                        onView(item.id);
-                                        setShowReadModal(true);
-                                    }} />
-                                    <Button bg="#737373" icon="edit" action={() => {
-                                        onEdit(item.id);
-                                        setShowEditModal(true);
-                                    }} />
-                                    <Button bg="#FF0000" icon="delete" action={() => {
-                                        onDelete(item.id);
-                                        setShowDeleteModal(true);
-                                    }} />
+                                    <Button bg="#F3BA53" icon="visibility" action={() => onView(item.nombre)} />
+                                    <Button bg="#737373" icon="edit" action={() => onEdit(item.id)} />
+                                    <Button bg="#FF0000" icon="delete" action={() => onDelete(item.id)} />
                                 </td>
                             </tr>
                         )) 
@@ -86,27 +66,6 @@ const CrudView = ({
                     )}
                 </tbody>
             </table>
-
-            {/* Modal para Editar */}
-            {editModal && 
-                <Modal isOpen={showEditModal} title="Editar registro" onClose={() => setShowEditModal(false)}>
-                    {editModal}
-                </Modal>
-            }
-
-            {/* Modal para Eliminar */}
-            {deleteModal && 
-                <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
-                    {deleteModal}
-                </Modal>
-            }
-
-            {/* Modal para Visualizar */}
-            {readModal && 
-                <Modal isOpen={showReadModal} title="Ver registro" onClose={() => setShowReadModal(false)}>
-                    {readModal}
-                </Modal>
-            }
         </div>
     );
 };
