@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
-import Input from '../components/Input';
+import SearchableInput from '../components/SearchableInput';
 import Modal from '../components/Modal';
 import styles from '../styles/CrudView.module.css';
 
@@ -11,27 +11,26 @@ const CrudView = ({
     onView, 
     onEdit, 
     onDelete, 
-    onAdd, 
+    onAdd,
     createModal, 
     deleteModal, 
     editModal, 
     readModal 
 }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredData, setFilteredData] = useState(data);
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-        onQuery(e.target.value);
-    };
+    useEffect(() => {
+        setFilteredData(data);
+    }, [data]);
 
     return (
         <div className={styles.crudViewContainer}>
             <h1>{title}</h1>
             <div className={styles.inputContainer}>
-                <Input
+                <SearchableInput
                     placeholder="Buscar por nombre"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
+                    data={data}
+                    onFilteredData={setFilteredData}
                     id="searchInput"
                     name="searchInput"
                 />
@@ -47,11 +46,11 @@ const CrudView = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {data.length > 0 ? (
-                        data.map((item) => (
+                    {filteredData.length > 0 ? (
+                        filteredData.map((item) => (
                             <tr key={item.id}>
                                 <td>{item.id}</td>
-                                <td>{item.nombre ? (item.nombre + ' ' + item.apellidoPaterno + ' ' + item.apellidoMaterno) : item.nombrePadreTutor}</td>
+                                <td>{item.nombrePadreTutor || (item.apellidoPaterno ? (item.nombre + ' ' + item.apellidoPaterno + ' ' +  item.apellidoMaterno) : null) || (item.idAlumno.apellidoPaterno ? (item.idAlumno.nombre + ' ' + item.idAlumno.apellidoPaterno + ' ' +  item.idAlumno.apellidoMaterno) : null)}</td>
                                 <td className={styles.actionButtons}>
                                     <Button bg="#F3BA53" icon="visibility" action={() => onView(item.nombre)} />
                                     <Button bg="#737373" icon="edit" action={() => onEdit(item.id)} />
