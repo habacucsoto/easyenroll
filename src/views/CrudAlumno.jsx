@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import { useUser } from '../users/UserContext';
 
 const GET_STUDENTS = gql`
     query {
@@ -117,6 +118,7 @@ const MODIFY_STUDENT = gql`
 `;
 
 const CrudAlumno = () => {
+    const { user } = useUser();
     const { loading, error, data, refetch } = useQuery(GET_STUDENTS);
     const [createStudent] = useMutation(CREATE_STUDENT, {
         refetchQueries: [{ query: GET_STUDENTS }]
@@ -302,10 +304,15 @@ const CrudAlumno = () => {
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
                     <div>
                         <p>¿Estás seguro que deseas eliminar este alumno?</p>
-                        <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        {user.groups.some(group => group.name === 'Directivo') ? (
+                            <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        ) : (
+                            <p>No tienes permisos para eliminar este alumno.</p>
+                        )}
                     </div>
                 </Modal>
             }
+
 
             {/* Modal para Ver */}
             {showViewModal && dataView && 
