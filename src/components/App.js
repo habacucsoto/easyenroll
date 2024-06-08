@@ -8,6 +8,8 @@ import Home from "./Home";
 import { UserProvider } from '../users/UserContext';
 import UserInfo from '../users/UserInfo';
 import CrudAlumno from "../views/CrudAlumno";
+import CrudTutor from "../views/CrudTutor";
+import CrudEnrollment from "../views/CrudEnrollment";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,6 +60,8 @@ const App = () => {
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/home" element={<Home />} />
             <Route path="/alumno" element={<CrudAlumno />} />
+            <Route path="/tutor" element={<CrudTutor />} />
+            <Route path="/inscripcion" element={<CrudEnrollment />} />
           </Routes> 
         </div>
       </div>
