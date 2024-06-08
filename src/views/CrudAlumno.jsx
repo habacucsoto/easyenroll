@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CrudView from './CrudView';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import SearchableInput from '../components/SearchableInput';
 
 const GET_STUDENTS = gql`
     query {
@@ -140,6 +141,7 @@ const CrudAlumno = () => {
         sexo: ''
     });
 
+    const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
@@ -152,6 +154,12 @@ const CrudAlumno = () => {
         variables: { nombre: studentToView },
         skip: !studentToView
     });
+
+    useEffect(() => {
+        if (data && data.students) {
+            setFilteredData(data.students);
+        }
+    }, [data]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -222,7 +230,7 @@ const CrudAlumno = () => {
         <div>
             <CrudView
                 title="Gestión de Alumnos"
-                data={data.students}
+                data={filteredData}
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={handleView}
                 onEdit={(id) => {
