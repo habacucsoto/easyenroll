@@ -5,11 +5,21 @@ const SearchableInput = ({ placeholder, data, onFilteredData }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        const filteredData = data.filter(item =>
-            item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.apellidoPaterno.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.apellidoMaterno.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (item.nombrePadreTutor && item.nombrePadreTutor.toLowerCase().includes(searchTerm.toLowerCase()))
+        const filteredData = data.filter(item => {
+                if(item.nombre){
+                    return item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.apellidoPaterno.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.apellidoMaterno.toLowerCase().includes(searchTerm.toLowerCase())
+                }
+                if(item.nombrePadreTutor){
+                    return item.nombrePadreTutor.toLowerCase().includes(searchTerm.toLowerCase())
+                }
+                if(item.idAlumno.nombre){
+                    return item.idAlumno.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.idAlumno.apellidoPaterno.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.idAlumno.apellidoMaterno.toLowerCase().includes(searchTerm.toLowerCase())
+                }
+            }
         );
         onFilteredData(filteredData);
     }, [searchTerm, data, onFilteredData]);

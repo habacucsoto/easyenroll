@@ -15,7 +15,8 @@ const CrudView = ({
     createModal, 
     deleteModal, 
     editModal, 
-    readModal 
+    readModal,
+    isParentTutor
 }) => {
     const [filteredData, setFilteredData] = useState(data);
 
@@ -52,7 +53,7 @@ const CrudView = ({
                                 <td>{item.id}</td>
                                 <td>{item.nombrePadreTutor || (item.apellidoPaterno ? (item.nombre + ' ' + item.apellidoPaterno + ' ' +  item.apellidoMaterno) : null) || (item.idAlumno.apellidoPaterno ? (item.idAlumno.nombre + ' ' + item.idAlumno.apellidoPaterno + ' ' +  item.idAlumno.apellidoMaterno) : null)}</td>
                                 <td className={styles.actionButtons}>
-                                    <Button bg="#F3BA53" icon="visibility" action={() => onView(item.nombre)} />
+                                    <Button bg="#F3BA53" icon="visibility" action={() => onView(isParentTutor ? item.nombrePadreTutor : item.nombre)} />
                                     <Button bg="#737373" icon="edit" action={() => onEdit(item.id)} />
                                     <Button bg="#FF0000" icon="delete" action={() => onDelete(item.id)} />
                                 </td>

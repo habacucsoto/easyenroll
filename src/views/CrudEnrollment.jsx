@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CrudView from './CrudView';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import SearchableInput from '../components/SearchableInput';
+import { useUser } from '../users/UserContext';
 
 const GET_ENROLLMENTS = gql`
     query {
@@ -138,6 +140,7 @@ const GET_ENROLLMENT_BY_NAME = gql`
 `;
 
 const CrudEnrollment = () => {
+    const { user } = useUser();
     const { loading, error, data, refetch } = useQuery(GET_ENROLLMENTS);
     const [createEnrollment] = useMutation(CREATE_ENROLLMENT, {
         refetchQueries: [{ query: GET_ENROLLMENTS }]
@@ -159,6 +162,7 @@ const CrudEnrollment = () => {
         tipoInscripcion: ''
     });
 
+    const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
@@ -171,6 +175,12 @@ const CrudEnrollment = () => {
         variables: { nombre: enrollmentToView },
         skip: !enrollmentToView
     });
+
+    useEffect(() => {
+        if (data && data.enrollments) {
+            setFilteredData(data.enrollments);
+        }
+    }, [data]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -239,7 +249,7 @@ const CrudEnrollment = () => {
         <div>
             <CrudView
                 title="Gestión de Inscripciones"
-                data={data.enrollments}
+                data={filteredData}
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={handleView}
                 onEdit={(id) => {
@@ -253,7 +263,7 @@ const CrudEnrollment = () => {
                 onAdd={() => setShowCreateModal(true)}
                 createModal={
                     <div>
-                        <Input
+                        <SearchableInput
                             placeholder="Factura"
                             value={formValues.factura}
                             onChange={handleInputChange}

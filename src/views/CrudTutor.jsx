@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CrudView from './CrudView';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
+import SearchableInput from '../components/SearchableInput';
 import gql from 'graphql-tag';
+import { useUser } from '../users/UserContext';
 
 const GET_TUTORS = gql`
     query {
@@ -114,6 +116,7 @@ const MODIFY_TUTOR = gql`
 `;
 
 const CrudTutor = () => {
+    const { user } = useUser();
     const { loading, error, data, refetch } = useQuery(GET_TUTORS);
     const [createTutor] = useMutation(CREATE_TUTOR, {
         refetchQueries: [{ query: GET_TUTORS }]
@@ -136,6 +139,7 @@ const CrudTutor = () => {
         alumnoId: ''
     });
 
+    const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
@@ -148,6 +152,12 @@ const CrudTutor = () => {
         variables: { nombre: tutorToView },
         skip: !tutorToView
     });
+
+    useEffect(() => {
+        if (data && data.tutors) {
+            setFilteredData(data.tutors);
+        }
+    }, [data]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -182,7 +192,7 @@ const CrudTutor = () => {
     const handleView = async (nombre) => {
         setTutorToView(nombre);
         setShowViewModal(true);
-        refetchView();
+        //refetchView();
     };
 
     const handleEdit = async () => {
@@ -217,9 +227,10 @@ const CrudTutor = () => {
         <div>
             <CrudView
                 title="Gestión de Tutores"
-                data={data.tutors}
+                data={filteredData}
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={handleView}
+                isParentTutor={true}
                 onEdit={(id) => {
                     const tutor = data.tutors.find((tut) => tut.id === id);
                     prepareEdit(tutor);
@@ -233,7 +244,7 @@ const CrudTutor = () => {
                     showCreateModal && ( // Mostrar modal solo si showCreateModal es true
                         <Modal isOpen={showCreateModal} title="Crear Tutor" onClose={() => setShowCreateModal(false)}>
                             <div>
-                                <Input
+                                <SearchableInput
                                     placeholder="Nombre del Padre/Tutor"
                                     value={formValues.nombrePadreTutor}
                                     onChange={handleInputChange}
@@ -290,10 +301,16 @@ const CrudTutor = () => {
             />
 
             {/* Modal para Eliminar */}
-            {showDeleteModal &&
+            {showDeleteModal && 
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
-                    <p>¿Estás seguro de que quieres eliminar este tutor?</p>
-                    <Button bg="#FF5C5C" text="Eliminar" action={handleDelete} />
+                    <div>
+                        <p>¿Estás seguro que deseas eliminar este tutor?</p>
+                        {user.groups.some(group => group.name === 'Directivo') ? (
+                            <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        ) : (
+                            <p>No tienes permisos para eliminar este tutor.</p>
+                        )}
+                    </div>
                 </Modal>
             }
 
