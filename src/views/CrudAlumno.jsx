@@ -196,7 +196,7 @@ const CrudAlumno = () => {
     const handleView = async (nombre) => {
         setStudentToView(nombre);
         setShowViewModal(true);
-        refetchView();
+//        refetchView();
     };
 
     const handleEdit = async () => {
