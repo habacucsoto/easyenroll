@@ -18,6 +18,7 @@ const Home = () => {
       {isDirectivo && <p>Puedes crear, editar, visualizar y eliminar información de:</p>}
       {isAdministrativo && !isDirectivo && <p>Puedes crear, editar y visualizar información de:</p>}
       <ul>
+        <li>Inscripciones</li>
         <li>Padres/Tutores</li>
         <li>Alumnos</li>
       </ul>

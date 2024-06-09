@@ -116,26 +116,26 @@ const MODIFY_ENROLLMENT = gql`
 `;
 
 const GET_ENROLLMENT_BY_NAME = gql`
-    query GET_ENROLLMENT_BY_NAME($id: String!){
-        enrollments(idUsuario: $id) {
-        id
-        factura
-        tipoInscripcion
-        modalidadPago
-        idAlumno {
-        id
-        nombre
-        apellidoPaterno
-        apellidoMaterno
-        escuelaProcedencia
+    query GET_ENROLLMENT_BY_NAME($idAlumno: String!){
+        enrollments(idAlumno: $idAlumno) {
+            id
+            factura
+            tipoInscripcion
+            modalidadPago
+            idAlumno {
+                id
+                nombre
+                apellidoPaterno
+                apellidoMaterno
+                escuelaProcedencia
+            }
+            idPago {
+                idPago
+            }
+            idUsuario {
+                id
+            }
         }
-        idPago {
-        idPago
-        }
-        idUsuario {
-        id
-        }
-    }
     }
 `;
 
@@ -229,12 +229,17 @@ const CrudEnrollment = () => {
     };
 
     const prepareEdit = (enrollment) => {
+        if (!enrollment) {
+            console.error('Enrollment not found');
+            return;
+        }
+
         setFormValues({
             id: enrollment.id,
             factura: enrollment.factura,
-            idAlumno: enrollment.alumno.id,
-            idPago: enrollment.pago.idPago,
-            idUsuario: enrollment.usuario.id,
+            idAlumno: enrollment.idAlumno.id,
+            idPago: enrollment.idPago.idPago,
+            idUsuario: enrollment.idUsuario.id,
             modalidadPago: enrollment.modalidadPago,
             tipoInscripcion: enrollment.tipoInscripcion
         });
@@ -365,8 +370,12 @@ const CrudEnrollment = () => {
             {showDeleteModal && 
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
                     <div>
-                        <p>¿Estás seguro que deseas eliminar esta inscripción?</p>
-                        <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        <p>¿Estás seguro que deseas eliminar esta inscripcion?</p>
+                        {user.groups.some(group => group.name === 'Directivo') ? (
+                            <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        ) : (
+                            <p>No tienes permisos para eliminar esta inscripcion.</p>
+                        )}
                     </div>
                 </Modal>
             }
@@ -386,21 +395,21 @@ const CrudEnrollment = () => {
                                 />
                                 <Input
                                     placeholder="Alumno ID"
-                                    value={enrollment.alumno.id}
+                                    value={enrollment.idAlumno.id}
                                     isDisabled={true}
                                     id="viewInputAlumnoId"
                                     name="idAlumno"
                                 />
                                 <Input
                                     placeholder="Pago ID"
-                                    value={enrollment.pago.idPago}
+                                    value={enrollment.idPago.idPago}
                                     isDisabled={true}
                                     id="viewInputPagoId"
                                     name="idPago"
                                 />
                                 <Input
                                     placeholder="Usuario ID"
-                                    value={enrollment.usuario.id}
+                                    value={enrollment.idUsuario.id}
                                     isDisabled={true}
                                     id="viewInputUsuarioId"
                                     name="idUsuario"
