@@ -370,8 +370,12 @@ const CrudEnrollment = () => {
             {showDeleteModal && 
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
                     <div>
-                        <p>¿Estás seguro que deseas eliminar esta inscripción?</p>
-                        <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        <p>¿Estás seguro que deseas eliminar esta inscripcion?</p>
+                        {user.groups.some(group => group.name === 'Directivo') ? (
+                            <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        ) : (
+                            <p>No tienes permisos para eliminar esta inscripcion.</p>
+                        )}
                     </div>
                 </Modal>
             }
