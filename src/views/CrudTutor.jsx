@@ -192,7 +192,7 @@ const CrudTutor = () => {
     const handleView = async (nombre) => {
         setTutorToView(nombre);
         setShowViewModal(true);
-        refetchView();
+        //refetchView();
     };
 
     const handleEdit = async () => {
@@ -230,6 +230,7 @@ const CrudTutor = () => {
                 data={filteredData}
                 onQuery={(query) => console.log('Consulta con término:', query)}
                 onView={handleView}
+                isParentTutor={true}
                 onEdit={(id) => {
                     const tutor = data.tutors.find((tut) => tut.id === id);
                     prepareEdit(tutor);
@@ -300,10 +301,16 @@ const CrudTutor = () => {
             />
 
             {/* Modal para Eliminar */}
-            {showDeleteModal &&
+            {showDeleteModal && 
                 <Modal isOpen={showDeleteModal} title="Eliminar registro" onClose={() => setShowDeleteModal(false)}>
-                    <p>¿Estás seguro de que quieres eliminar este tutor?</p>
-                    <Button bg="#FF5C5C" text="Eliminar" action={handleDelete} />
+                    <div>
+                        <p>¿Estás seguro que deseas eliminar este tutor?</p>
+                        {user.groups.some(group => group.name === 'Directivo') ? (
+                            <Button bg="#FF0000" text="Eliminar" action={handleDelete} />
+                        ) : (
+                            <p>No tienes permisos para eliminar este tutor.</p>
+                        )}
+                    </div>
                 </Modal>
             }
 
