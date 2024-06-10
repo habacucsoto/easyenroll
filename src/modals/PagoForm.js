@@ -13,13 +13,16 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 id="createInputRecibo"
                 name="recibo"
             />
-            <Input
-                placeholder="Descuento"
-                value={formValues.descuento}
-                onChange={handleInputChange}
-                id="createInputDescuento"
-                name="descuento"
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Input
+                    placeholder="Descuento"
+                    value={formValues.descuento}
+                    onChange={handleInputChange}
+                    id="createInputDescuento"
+                    name="descuento"
+                />
+                <span style={{ marginLeft: '5px' }}>%</span>
+            </div>
             <Input
                 placeholder="ID Recibo"
                 value={formValues.idRecibo}
@@ -27,27 +30,33 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 id="createInputIdRecibo"
                 name="idRecibo"
             />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span>$</span>
+                <Input
+                    placeholder="Monto"
+                    value={formValues.monto}
+                    onChange={handleInputChange}
+                    id="createInputMonto"
+                    name="monto"
+                />
+            </div>
             <Input
-                placeholder="Monto"
-                value={formValues.monto}
-                onChange={handleInputChange}
-                id="createInputMonto"
-                name="monto"
-            />
-            <Input
-                placeholder="Fecha de Pago"
+                placeholder="Fecha de Pago (AAAA-MM-DD)"
                 value={formValues.fechaPago}
                 onChange={handleInputChange}
                 id="createInputFechaPago"
                 name="fechaPago"
             />
-            <Input
-                placeholder="Método de Pago"
-                value={formValues.metodoPago}
-                onChange={handleInputChange}
+            <select
                 id="createInputMetodoPago"
                 name="metodoPago"
-            />
+                value={formValues.metodoPago || 'E'}
+                onChange={handleInputChange}
+            >
+                <option value="E">Efectivo</option>
+                <option value="T">Tarjeta</option>
+                <option value="Tr">Transferencia</option>
+            </select>
             <Button bg="#00BF63" text="Siguiente" action={onNext} />
         </div>
     );

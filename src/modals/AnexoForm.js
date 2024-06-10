@@ -1,50 +1,44 @@
 import React from 'react';
-import Input from '../components/Input';
+import Checkbox from '../components/Checkbox';
 import Button from '../components/Button';
 
 const AnexoForm = ({ formValues, handleInputChange, onSubmit, onBack }) => {
     return (
         <div>
             <h2>Rellenar Anexos y Registrar Inscripción</h2>
-            <Input
-                type="checkbox"
-                label="Carta Buena Conducta"
-                checked={formValues.cartaBuenaConducta}
-                onChange={handleInputChange}
+            <Checkbox
                 id="createInputCartaBuenaConducta"
                 name="cartaBuenaConducta"
-            />
-            <Input
-                type="checkbox"
-                label="Certificado Primaria"
-                checked={formValues.certificadoPrimaria}
+                checked={formValues.cartaBuenaConducta}
                 onChange={handleInputChange}
+            >
+                Buena conducta
+            </Checkbox>
+            <Checkbox
                 id="createInputCertificadoPrimaria"
                 name="certificadoPrimaria"
-            />
-            <Input
-                type="checkbox"
-                label="CURP Alumno"
-                checked={formValues.curpAlumno}
+                checked={formValues.certificadoPrimaria}
                 onChange={handleInputChange}
+            >
+                Certificado de primaria
+            </Checkbox>
+            <Checkbox
                 id="createInputCurpAlumno"
                 name="curpAlumno"
-            />
-            <Input
-                type="checkbox"
-                label="Acta Nacimiento"
-                checked={formValues.actaNacimiento}
+                checked={formValues.curpAlumno}
                 onChange={handleInputChange}
+            >
+                CURP del alumno
+            </Checkbox>
+            <Checkbox
                 id="createInputActaNacimiento"
                 name="actaNacimiento"
-            />
-            <Input
-                placeholder="Observaciones"
-                value={formValues.observaciones}
+                checked={formValues.actaNacimiento}
                 onChange={handleInputChange}
-                id="createInputObservaciones"
-                name="observaciones"
-            />
+            >
+                Acta de nacimiento
+            </Checkbox>
+
             <Button bg="#737373" text="Atrás" action={onBack} />
             <Button bg="#00BF63" text="Registrar Inscripción" action={onSubmit} />
         </div>

@@ -233,6 +233,7 @@ const CrudEnrollment = ({...props}) => {
         }
     }, [data]);
 
+    const totalSteps = 3;
     const [currentStep, setCurrentStep] = useState(1);
     const nextStep = () => setCurrentStep(currentStep + 1);
     const prevStep = () => setCurrentStep(currentStep - 1);
@@ -372,6 +373,7 @@ const CrudEnrollment = ({...props}) => {
                 {currentStep === 1 && <PagoForm formValues={formValues} handleInputChange={handleInputChange} onNext={nextStep} />}
                 {currentStep === 2 && <InscripcionForm formValues={formValues} handleInputChange={handleInputChange} onNext={nextStep} onBack={prevStep} />}
                 {currentStep === 3 && <AnexoForm formValues={formValues} handleInputChange={handleInputChange} onSubmit={handleAdd} onBack={prevStep} />}
+                <h3>Paso {currentStep} de {totalSteps}</h3>
             </Modal>
             }
 
