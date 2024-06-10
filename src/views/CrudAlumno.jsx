@@ -182,8 +182,8 @@ const CrudAlumno = () => {
 
     const validateCurp = (curp) => {
         // Expresión regular para validar CURP
-        const re = /^.{18}$/;
-        return re.test(curp);
+        const regexCurp = /^[A-Z0-9]{18}$/;
+        return regexCurp.test(curp);
     };
 
     const validateText = (value) => {

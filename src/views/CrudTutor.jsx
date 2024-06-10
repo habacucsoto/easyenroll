@@ -28,12 +28,12 @@ const GET_TUTORS = gql`
 const CREATE_TUTOR = gql`
     mutation CreatePadresTutores(
         $alumnoId: Int!,
-        $curpTutor: String,
-        $emailPadreTutor: String,
-        $nombrePadreTutor: String,
-        $scanComprobanteDomicilio: String,
-        $scanIne: String,
-        $telefono: String
+        $curpTutor: String!,
+        $emailPadreTutor: String!,
+        $nombrePadreTutor: String!,
+        $scanComprobanteDomicilio: String!,
+        $scanIne: String!,
+        $telefono: String!
     ) {
         createTutor(
             alumnoId: $alumnoId,
@@ -177,8 +177,8 @@ const CrudTutor = () => {
 
     const validateCurp = (curp) => {
         // Expresión regular para validar CURP
-        const re = /^.{18}$/;
-        return re.test(curp);
+        const regexCurp = /^[A-Z0-9]{18}$/;
+        return regexCurp.test(curp);
     };
 
     const validateText = (value) => {
