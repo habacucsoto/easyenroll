@@ -12,7 +12,7 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 if (!value) error = 'El recibo es obligatorio';
                 break;
             case 'descuento':
-                if (!value || isNaN(value) || value < 0 || value > 100) error = 'El descuento debe ser un número entre 0 y 100';
+                if (isNaN(value) || value < 0 || value > 100) error = 'El descuento debe ser un número entre 0 y 100';
                 break;
             case 'idRecibo':
                 if (!value) error = 'El ID de recibo es obligatorio';
@@ -24,11 +24,15 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) error = 'La fecha de pago debe ser en el formato AAAA-MM-DD';
                 break;
             case 'metodoPago':
-                if (!value) error = 'El método de pago es obligatorio';
+                // Aseguramos que el valor no sea undefined o null para evitar falsos positivos
+                if (value === undefined || value === null || value === '') {
+                    error = 'El método de pago es obligatorio';
+                }
                 break;
             default:
                 break;
         }
+        
         setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
         return error === '';
     };
@@ -108,16 +112,20 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 name="fechaPago"
             />
             {errors.fechaPago && <div style={{ color: 'red' }}>{errors.fechaPago}</div>}
+            <label>Metodo de pago</label>
+            <br />
             <select
                 id="createInputMetodoPago"
                 name="metodoPago"
-                value={formValues.metodoPago || 'E'}
                 onChange={handleInputChangeWithValidation}
+                value={formValues.metodoPago || ''} // Usa '' como valor por defecto
             >
+                <option value="">Seleccione</option>
                 <option value="E">Efectivo</option>
                 <option value="T">Tarjeta</option>
                 <option value="Tr">Transferencia</option>
             </select>
+
             {errors.metodoPago && <div style={{ color: 'red' }}>{errors.metodoPago}</div>}
             <Button bg="#00BF63" text="Siguiente" action={handleNext} />
         </div>

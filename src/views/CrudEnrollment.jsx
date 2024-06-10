@@ -293,7 +293,7 @@ const CrudEnrollment = ({...props}) => {
     
 
             setShowCreateModal(false);
-
+            refetch();
         } catch (error) {
             console.error("Error creando la inscripción:", error);
         }

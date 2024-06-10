@@ -28,6 +28,7 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
     const [selectedStudentName, setSelectedStudentName] = useState('');
 
     useEffect(() => {
+        // Asegura que haya un valor por defecto para modalidadPago si no está definido
         if (!formValues.modalidadPago) {
             handleInputChange({
                 target: {
@@ -36,11 +37,12 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 }
             });
         }
+        // Asegura que haya un valor por defecto para tipoInscripcion si no está definido
         if (!formValues.tipoInscripcion) {
             handleInputChange({
                 target: {
                     name: 'tipoInscripcion',
-                    value: 'R' 
+                    value: 'I' 
                 }
             });
         }
@@ -70,9 +72,11 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 if (!value) error = 'El nombre del alumno es obligatorio';
                 break;
             case 'modalidadPago':
+                // Validación específica para modalidadPago si es requerida
                 if (!value) error = 'La modalidad de pago es obligatoria';
                 break;
             case 'tipoInscripcion':
+                // Validación específica para tipoInscripcion si es requerida
                 if (!value) error = 'El tipo de inscripción es obligatorio';
                 break;
             default:
@@ -150,25 +154,29 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 </div>
             )}
             
-            <label htmlFor="createInputModalidadPago">Modalidad de Pago:</label>
+            <label htmlFor="createInputModalidadPago">Modalidad de pago:</label>
             <select
                 id="createInputModalidadPago"
                 name="modalidadPago"
                 value={formValues.modalidadPago}
                 onChange={handleInputChangeWithValidation}
+                defaultValue="12" // No se usa defaultValue, ya que value tiene prioridad
             >
+                <option value="">Modalidad</option>
                 <option value="12">12 meses</option>
                 <option value="10">10 meses</option>
             </select>
             {errors.modalidadPago && <div style={{ color: 'red' }}>{errors.modalidadPago}</div>}
-            
+            <br />
             <label htmlFor="createInputTipoInscripcion">Tipo de Inscripción:</label>
             <select
                 id="createInputTipoInscripcion"
                 name="tipoInscripcion"
                 value={formValues.tipoInscripcion}
                 onChange={handleInputChangeWithValidation}
+                defaultValue="I" // No se usa defaultValue, ya que value tiene prioridad
             >
+                <option value="">Tipo</option>
                 <option value="I">Inscripción</option>
                 <option value="R">Reinscripción</option>
             </select>
