@@ -5,6 +5,7 @@ import { useUser } from './UserContext';
 const USER_INFO_QUERY = gql`
   query UserInfoQuery {
     me {
+      id
       username
       firstName
       groups {
@@ -20,8 +21,8 @@ const UserInfo = () => {
 
   useEffect(() => {
     if (data) {
-      const { username, firstName, groups } = data.me;
-      setUser({ username, firstName, groups });
+      const { id, username, firstName, groups } = data.me;
+      setUser({ id, username, firstName, groups });
     }
   }, [data, setUser]);
 
