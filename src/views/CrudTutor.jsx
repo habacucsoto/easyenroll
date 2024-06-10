@@ -139,6 +139,16 @@ const CrudTutor = () => {
         alumnoId: ''
     });
 
+    const [formErrors, setFormErrors] = useState({
+        nombrePadreTutor: '',
+        telefono: '',
+        curpTutor: '',
+        scanIne: '',
+        scanComprobanteDomicilio: '',
+        emailPadreTutor: '',
+        alumnoId: ''
+    });
+
     const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -159,15 +169,94 @@ const CrudTutor = () => {
         }
     }, [data]);
 
+    const validateEmail = (email) => {
+        // Expresión regular para validar email
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    const validateCurp = (curp) => {
+        // Expresión regular para validar CURP
+        const re = /^.{18}$/;
+        return re.test(curp);
+    };
+
+    const validateText = (value) => {
+        // Expresión regular para validar nombre con espacios
+        const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/u;
+        return regexNombre.test(value);
+    };
+
+    const validateTelefono = (value) => {
+        // Expresión regular para validar teléfono (exactamente 10 dígitos)
+        const regexTelefono = /^\d{10}$/;
+        return regexTelefono.test(value);
+    };
+
+    const validateEnlace = (value) => {
+        // Expresión regular para validar URL
+        const regexEnlace = /^(ftp|http|https):\/\/[^ "]+\.[^ "]+$/;
+        return regexEnlace.test(value);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormValues({
             ...formValues,
             [name]: value
         });
+
+        switch (name) {
+            case 'emailPadreTutor':
+                setFormErrors({
+                    ...formErrors,
+                    emailPadreTutor: validateEmail(value) ? '' : 'Correo inválido'
+                });
+                break;
+            case 'curpTutor':
+                setFormErrors({
+                    ...formErrors,
+                    curpTutor: validateCurp(value) ? '' : 'CURP inválido'
+                });
+                break;
+            case 'nombrePadreTutor':
+                setFormErrors({
+                    ...formErrors,
+                    nombrePadreTutor: validateText(value) ? '' : 'El texto debe contener solo letras y espacios'
+                });
+                break;
+            case 'telefono':
+                setFormErrors({
+                    ...formErrors,
+                    telefono: validateTelefono(value) ? '' : 'El teléfono debe contener exactamente 10 dígitos numéricos'
+                });
+                break;
+            case 'scanIne':
+                setFormErrors({
+                    ...formErrors,
+                    scanIne: validateEnlace(value) ? '' : 'El enlace debe ser una URL válida'
+                });
+                break;
+            case 'scanComprobanteDomicilio':
+                setFormErrors({
+                    ...formErrors,
+                    scanComprobanteDomicilio: validateEnlace(value) ? '' : 'El enlace debe ser una URL válida'
+                });
+                break;
+            // Puedes agregar más casos para otros campos aquí
+            default:
+                break;
+        }
     };
 
     const handleAdd = async () => {
+        // Validación general antes de crear el alumno
+        const hasErrors = Object.values(formErrors).some(error => error !== '');
+        if (hasErrors) {
+            console.error('Error en los campos del formulario');
+            return;
+        }
+
         try {
             await createTutor({ variables: formValues });
             setShowCreateModal(false);
@@ -196,6 +285,13 @@ const CrudTutor = () => {
     };
 
     const handleEdit = async () => {
+        // Validación general antes de modificar el alumno
+        const hasErrors = Object.values(formErrors).some(error => error !== '');
+        if (hasErrors) {
+            console.error('Error en los campos del formulario');
+            return;
+        }
+
         try {
             await modifyTutor({ variables: formValues });
             setShowEditModal(false);
@@ -244,12 +340,13 @@ const CrudTutor = () => {
                     showCreateModal && ( // Mostrar modal solo si showCreateModal es true
                         <Modal isOpen={showCreateModal} title="Crear Tutor" onClose={() => setShowCreateModal(false)}>
                             <div>
-                                <SearchableInput
+                                <Input
                                     placeholder="Nombre del Padre/Tutor"
                                     value={formValues.nombrePadreTutor}
                                     onChange={handleInputChange}
                                     id="createInputNombrePadreTutor"
                                     name="nombrePadreTutor"
+                                    error={formErrors.nombrePadreTutor}
                                 />
                                 <Input
                                     placeholder="Teléfono"
@@ -257,6 +354,7 @@ const CrudTutor = () => {
                                     onChange={handleInputChange}
                                     id="createInputTelefono"
                                     name="telefono"
+                                    error={formErrors.telefono}
                                 />
                                 <Input
                                     placeholder="CURP"
@@ -264,6 +362,7 @@ const CrudTutor = () => {
                                     onChange={handleInputChange}
                                     id="createInputCurpTutor"
                                     name="curpTutor"
+                                    error={formErrors.curpTutor}
                                 />
                                 <Input
                                     placeholder="Scan INE"
@@ -271,6 +370,7 @@ const CrudTutor = () => {
                                     onChange={handleInputChange}
                                     id="createInputScanIne"
                                     name="scanIne"
+                                    error={formErrors.scanIne}
                                 />
                                 <Input
                                     placeholder="Scan Comprobante de Domicilio"
@@ -278,6 +378,7 @@ const CrudTutor = () => {
                                     onChange={handleInputChange}
                                     id="createInputScanComprobanteDomicilio"
                                     name="scanComprobanteDomicilio"
+                                    error={formErrors.scanComprobanteDomicilio}
                                 />
                                 <Input
                                     placeholder="Email del Padre/Tutor"
@@ -285,6 +386,7 @@ const CrudTutor = () => {
                                     onChange={handleInputChange}
                                     id="createInputEmailPadreTutor"
                                     name="emailPadreTutor"
+                                    error={formErrors.emailPadreTutor}
                                 />
                                 <Input
                                     placeholder="ID del Alumno"
@@ -385,6 +487,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputNombrePadreTutor"
                             name="nombrePadreTutor"
+                            error={formErrors.nombrePadreTutor}
                         />
                         <Input
                             placeholder="Teléfono"
@@ -392,6 +495,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputTelefono"
                             name="telefono"
+                            error={formErrors.telefono}
                         />
                         <Input
                             placeholder="CURP del Tutor"
@@ -399,6 +503,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputCurpTutor"
                             name="curpTutor"
+                            error={formErrors.curpTutor}
                         />
                         <Input
                             placeholder="Escaneo INE"
@@ -406,6 +511,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputScanIne"
                             name="scanIne"
+                            error={formErrors.scanIne}
                         />
                         <Input
                             placeholder="Escaneo Comprobante de Domicilio"
@@ -413,6 +519,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputScanComprobanteDomicilio"
                             name="scanComprobanteDomicilio"
+                            error={formErrors.scanComprobanteDomicilio}
                         />
                         <Input
                             placeholder="Correo Electrónico del Padre/Tutor"
@@ -420,6 +527,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="createInputEmailPadreTutor"
                             name="emailPadreTutor"
+                            error={formErrors.emailPadreTutor}
                         />
                         <Input
                             placeholder="ID del Alumno Asociado"
@@ -444,6 +552,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputNombrePadreTutor"
                             name="nombrePadreTutor"
+                            error={formErrors.nombrePadreTutor}
                         />
                         <Input
                             placeholder="Teléfono"
@@ -451,6 +560,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputTelefono"
                             name="telefono"
+                            error={formErrors.telefono}
                         />
                         <Input
                             placeholder="CURP"
@@ -458,6 +568,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputCurpTutor"
                             name="curpTutor"
+                            error={formErrors.curpTutor}
                         />
                         <Input
                             placeholder="Scan INE"
@@ -465,6 +576,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputScanIne"
                             name="scanIne"
+                            error={formErrors.scanIne}
                         />
                         <Input
                             placeholder="Scan Comprobante de Domicilio"
@@ -472,6 +584,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputScanComprobanteDomicilio"
                             name="scanComprobanteDomicilio"
+                            error={formErrors.scanComprobanteDomicilio}
                         />
                         <Input
                             placeholder="Email del Padre/Tutor"
@@ -479,6 +592,7 @@ const CrudTutor = () => {
                             onChange={handleInputChange}
                             id="editInputEmailPadreTutor"
                             name="emailPadreTutor"
+                            error={formErrors.emailPadreTutor}
                         />
                         <Input
                             placeholder="ID del Alumno"

@@ -23,6 +23,7 @@ const GET_STUDENT_BY_NAME = gql`
 `;
 
 const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, currentStep }) => {
+    const [errors, setErrors] = useState({});
     const [suggestions, setSuggestions] = useState([]);
     const [selectedStudentName, setSelectedStudentName] = useState('');
 
@@ -62,6 +63,47 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
         setSuggestions([]); // Limpia las sugerencias después de seleccionar un alumno
     };
 
+    const validateField = (name, value) => {
+        let error = '';
+        switch (name) {
+            case 'idAlumno':
+                if (!value) error = 'El nombre del alumno es obligatorio';
+                break;
+            case 'modalidadPago':
+                if (!value) error = 'La modalidad de pago es obligatoria';
+                break;
+            case 'tipoInscripcion':
+                if (!value) error = 'El tipo de inscripción es obligatorio';
+                break;
+            default:
+                break;
+        }
+        setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
+        return error === '';
+    };
+
+    const handleInputChangeWithValidation = (e) => {
+        const { name, value } = e.target;
+        handleInputChange(e);
+        validateField(name, value);
+    };
+
+    const validate = () => {
+        let isValid = true;
+        
+        if (!validateField('idAlumno', formValues.idAlumno)) isValid = false;
+        if (!validateField('modalidadPago', formValues.modalidadPago)) isValid = false;
+        if (!validateField('tipoInscripcion', formValues.tipoInscripcion)) isValid = false;
+
+        return isValid;
+    };
+
+    const handleNext = () => {
+        if (validate()) {
+            onNext();
+        }
+    };
+
     return (
         <div>
             <h2>Seleccionar Alumno y Llenar Datos</h2>
@@ -69,7 +111,7 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 placeholder="Nombre del alumno"
                 value={selectedStudentName || formValues.idAlumno}
                 onChange={(e) => {
-                    handleInputChange(e);
+                    handleInputChangeWithValidation(e);
                     // Realiza la búsqueda y actualiza las sugerencias
                     if (e.target.value) {
                         setSuggestions(data ? data.students : []);
@@ -86,6 +128,7 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 id="createInputAlumnoId"
                 name="idAlumno"
             />
+            {errors.idAlumno && <div style={{ color: 'red' }}>{errors.idAlumno}</div>}
             {/* Muestra la lista de sugerencias si hay alguna */}
             {suggestions.length > 0 && (
                 <div>
@@ -112,21 +155,25 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 id="createInputModalidadPago"
                 name="modalidadPago"
                 value={formValues.modalidadPago}
-                onChange={handleInputChange}
+                onChange={handleInputChangeWithValidation}
             >
                 <option value="12">12 meses</option>
                 <option value="10">10 meses</option>
             </select>
+            {errors.modalidadPago && <div style={{ color: 'red' }}>{errors.modalidadPago}</div>}
+            
             <label htmlFor="createInputTipoInscripcion">Tipo de Inscripción:</label>
             <select
                 id="createInputTipoInscripcion"
                 name="tipoInscripcion"
                 value={formValues.tipoInscripcion}
-                onChange={handleInputChange}
+                onChange={handleInputChangeWithValidation}
             >
                 <option value="I">Inscripción</option>
                 <option value="R">Reinscripción</option>
             </select>
+            {errors.tipoInscripcion && <div style={{ color: 'red' }}>{errors.tipoInscripcion}</div>}
+            
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Checkbox
                     id="createInputFactura"
@@ -139,7 +186,7 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
 
             <div style={{ marginTop: '20px' }}>
                 {currentStep !== 1 && <Button bg="#737373" text="Atrás" action={onBack} />}
-                {currentStep !== 3 && <Button bg="#00BF63" text="Siguiente" action={onNext} />}
+                {currentStep !== 3 && <Button bg="#00BF63" text="Siguiente" action={handleNext} />}
             </div>
         </div>
     );

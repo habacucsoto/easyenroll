@@ -143,6 +143,17 @@ const CrudAlumno = () => {
         sexo: ''
     });
 
+    const [formErrors, setFormErrors] = useState({
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        correoInstitucional: '',
+        curp: '',
+        escuelaProcedencia: '',
+        gradoGrupoAsignado: '',
+        sexo: ''
+    });
+    
     const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -163,15 +174,76 @@ const CrudAlumno = () => {
         }
     }, [data]);
 
+    const validateEmail = (email) => {
+        // Expresión regular para validar email
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    const validateCurp = (curp) => {
+        // Expresión regular para validar CURP
+        const re = /^.{18}$/;
+        return re.test(curp);
+    };
+
+    const validateText = (value) => {
+        // Expresión regular para validar nombre con espacios
+        const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/u;
+        return regexNombre.test(value);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormValues({
             ...formValues,
             [name]: value
         });
+
+        switch (name) {
+            case 'correoInstitucional':
+                setFormErrors({
+                    ...formErrors,
+                    correoInstitucional: validateEmail(value) ? '' : 'Correo inválido'
+                });
+                break;
+            case 'curp':
+                setFormErrors({
+                    ...formErrors,
+                    curp: validateCurp(value) ? '' : 'CURP inválido'
+                });
+                break;
+            case 'nombre':
+                setFormErrors({
+                    ...formErrors,
+                    nombre: validateText(value) ? '' : 'El texto debe contener solo letras y espacios'
+                });
+                break;
+            case 'apellidoPaterno':
+                setFormErrors({
+                    ...formErrors,
+                    apellidoPaterno: validateText(value) ? '' : 'El texto debe contener solo letras y espacios'
+                });
+                break;
+            case 'apellidoMaterno':
+                setFormErrors({
+                    ...formErrors,
+                    apellidoMaterno: validateText(value) ? '' : 'El texto debe contener solo letras y espacios'
+                });
+                break;
+            // Puedes agregar más casos para otros campos aquí
+            default:
+                break;
+        }
     };
 
     const handleAdd = async () => {
+        // Validación general antes de crear el alumno
+        const hasErrors = Object.values(formErrors).some(error => error !== '');
+        if (hasErrors) {
+            console.error('Error en los campos del formulario');
+            return;
+        }
+
         try {
             await createStudent({ variables: formValues });
             setShowCreateModal(false);
@@ -200,6 +272,13 @@ const CrudAlumno = () => {
     };
 
     const handleEdit = async () => {
+        // Validación general antes de modificar el alumno
+        const hasErrors = Object.values(formErrors).some(error => error !== '');
+        if (hasErrors) {
+            console.error('Error en los campos del formulario');
+            return;
+        }
+
         try {
             await modifyStudent({ variables: formValues });
             setShowEditModal(false);
@@ -252,6 +331,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputNombre"
                             name="nombre"
+                            error={formErrors.nombre}
                         />
                         <Input
                             placeholder="Apellido Paterno"
@@ -259,6 +339,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputApellidoPaterno"
                             name="apellidoPaterno"
+                            error={formErrors.apellidoPaterno}
                         />
                         <Input
                             placeholder="Apellido Materno"
@@ -266,6 +347,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputApellidoMaterno"
                             name="apellidoMaterno"
+                            error={formErrors.apellidoMaterno}
                         />
                         <Input
                             placeholder="Correo Institucional"
@@ -273,6 +355,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputCorreoInstitucional"
                             name="correoInstitucional"
+                            error={formErrors.correoInstitucional}
                         />
                         <Input
                             placeholder="CURP"
@@ -280,6 +363,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputCurp"
                             name="curp"
+                            error={formErrors.curp}
                         />
                         <Input
                             placeholder="Escuela de Procedencia"
@@ -400,6 +484,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputNombre"
                             name="nombre"
+                            error={formErrors.nombre}
                         />
                         <Input
                             placeholder="Apellido Paterno"
@@ -407,6 +492,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputApellidoPaterno"
                             name="apellidoPaterno"
+                            error={formErrors.apellidoPaterno}
                         />
                         <Input
                             placeholder="Apellido Materno"
@@ -414,6 +500,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputApellidoMaterno"
                             name="apellidoMaterno"
+                            error={formErrors.apellidoMaterno}
                         />
                         <Input
                             placeholder="Correo Institucional"
@@ -421,6 +508,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputCorreoInstitucional"
                             name="correoInstitucional"
+                            error={formErrors.correoInstitucional}
                         />
                         <Input
                             placeholder="CURP"
@@ -428,6 +516,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="createInputCurp"
                             name="curp"
+                            error={formErrors.curp}
                         />
                         <Input
                             placeholder="Escuela de Procedencia"
@@ -465,6 +554,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="editInputNombre"
                             name="nombre"
+                            error={formErrors.nombre}
                         />
                         <Input
                             placeholder="Apellido Paterno"
@@ -472,6 +562,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="editInputApellidoPaterno"
                             name="apellidoPaterno"
+                            error={formErrors.apellidoPaterno}
                         />
                         <Input
                             placeholder="Apellido Materno"
@@ -479,6 +570,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="editInputApellidoMaterno"
                             name="apellidoMaterno"
+                            error={formErrors.apellidoMaterno}
                         />
                         <Input
                             placeholder="Correo Institucional"
@@ -486,6 +578,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="editInputCorreoInstitucional"
                             name="correoInstitucional"
+                            error={formErrors.correoInstitucional}
                         />
                         <Input
                             placeholder="CURP"
@@ -493,6 +586,7 @@ const CrudAlumno = () => {
                             onChange={handleInputChange}
                             id="editInputCurp"
                             name="curp"
+                            error={formErrors.curp}
                         />
                         <Input
                             placeholder="Escuela de Procedencia"
