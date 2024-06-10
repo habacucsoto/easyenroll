@@ -7,6 +7,9 @@ import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import SearchableInput from '../components/SearchableInput';
 import { useUser } from '../users/UserContext';
+import PagoForm from '../modals/PagoForm';
+import InscripcionForm from '../modals/InscripcionForm';
+import AnexoForm from '../modals/AnexoForm';
 
 const GET_ENROLLMENTS = gql`
     query {
@@ -139,7 +142,32 @@ const GET_ENROLLMENT_BY_NAME = gql`
     }
 `;
 
-const CrudEnrollment = () => {
+const CREATE_PAGO = gql`
+    mutation createPayment($recibo: String!, $descuento: Int!, $idRecibo: Int!, $monto: Float!, $fechaPago: Date!, $metodoPago: String!) {
+        createPayment(recibo: $recibo, descuento: $descuento, idRecibo: $idRecibo, monto: $monto, fechaPago: $fechaPago, metodoPago: $metodoPago) {
+            idPago
+        }
+    }
+`;
+
+const CREATE_INSCRIPCION = gql`
+    mutation createEnrollment($factura: Boolean!, $tipoInscripcion: String!, $modalidadPago: String!, $idAlumno: Int!, $idPago: Int!, $idUsuario: Int!) {
+        createEnrollment(factura: $factura, tipoInscripcion: $tipoInscripcion, modalidadPago: $modalidadPago, idAlumno: $idAlumno, idPago: $idPago, idUsuario: $idUsuario) {
+            id
+        }
+    }
+`;
+
+const CREATE_ANEXO_ALUMNOS = gql`
+    mutation createAnnex($cartaBuenaConducta: Boolean!, $certificadoPrimaria: Boolean!, $curpAlumno: Boolean!, $actaNacimiento: Boolean!, $observaciones: String!, $cda: String!, $autorizacionIrseSolo: Boolean!, $autorizacionPublicitaria: Boolean!, $atencionPsicologica: Boolean!, $padecimiento: String!, $usoAparatoAuditivo: Boolean!, $usoDeLentes: Boolean!, $lateralidad: String!, $idAlumno: Int!) {
+        createAnnex(cartaBuenaConducta: $cartaBuenaConducta, certificadoPrimaria: $certificadoPrimaria, curpAlumno: $curpAlumno, actaNacimiento: $actaNacimiento, observaciones: $observaciones, cda: $cda, autorizacionIrseSolo: $autorizacionIrseSolo, autorizacionPublicitaria: $autorizacionPublicitaria, atencionPsicologica: $atencionPsicologica, padecimiento: $padecimiento, usoAparatoAuditivo: $usoAparatoAuditivo, usoDeLentes: $usoDeLentes, lateralidad: $lateralidad, idAlumno: $idAlumno) {
+            id
+        }
+    }
+`;
+
+
+const CrudEnrollment = ({...props}) => {
     const { user } = useUser();
     const { loading, error, data, refetch } = useQuery(GET_ENROLLMENTS);
     const [createEnrollment] = useMutation(CREATE_ENROLLMENT, {
@@ -153,15 +181,33 @@ const CrudEnrollment = () => {
     });
 
     const [formValues, setFormValues] = useState({
-        id: null,
-        factura: false,
+        
+        recibo: '',
+        descuento: 0,
+        idRecibo: '',
+        monto: '',
+        fechaPago: '',
+        metodoPago: '',
         idAlumno: '',
-        idPago: '',
-        idUsuario: '',
         modalidadPago: '',
-        tipoInscripcion: ''
+        tipoInscripcion: '',
+        factura: false,
+        cartaBuenaConducta: false,
+        certificadoPrimaria: false,
+        curpAlumno: false,
+        actaNacimiento: false,
+        observaciones: '',
+        cda: '',
+        autorizacionIrseSolo: false,
+        autorizacionPublicitaria: false,
+        atencionPsicologica: false,
+        padecimiento: '',
+        usoAparatoAuditivo: false,
+        usoDeLentes: false,
+        lateralidad: '',
+        idUsuario: '',
     });
-
+    
     const [filteredData, setFilteredData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -170,6 +216,11 @@ const CrudEnrollment = () => {
     const [enrollmentToDelete, setEnrollmentToDelete] = useState(null);
     const [enrollmentToView, setEnrollmentToView] = useState(null);
     const [enrollmentToEdit, setEnrollmentToEdit] = useState(null);
+
+    const [createPagoMutation] = useMutation(CREATE_PAGO);
+    const [createInscripcionMutation] = useMutation(CREATE_INSCRIPCION);
+    const [createAnexoAlumnosMutation] = useMutation(CREATE_ANEXO_ALUMNOS);
+
 
     const { loading: loadingView, data: dataView, refetch: refetchView } = useQuery(GET_ENROLLMENT_BY_NAME, {
         variables: { nombre: enrollmentToView },
@@ -182,21 +233,68 @@ const CrudEnrollment = () => {
         }
     }, [data]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
+    const [currentStep, setCurrentStep] = useState(1);
+    const nextStep = () => setCurrentStep(currentStep + 1);
+    const prevStep = () => setCurrentStep(currentStep - 1);
+
+    const handleInputChange = (event) => {
+        const { name, value, type, checked } = event.target;
         setFormValues({
             ...formValues,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value,
         });
     };
 
     const handleAdd = async () => {
         try {
-            await createEnrollment({ variables: formValues });
+            const { data: pagoData } = await createPagoMutation({
+                variables: {
+                    recibo: formValues.recibo,
+                    descuento: formValues.descuento,
+                    idRecibo: formValues.idRecibo,
+                    monto: formValues.monto,
+                    fechaPago: formValues.fechaPago,
+                    metodoPago: formValues.metodoPago,
+                }
+            });
+    
+            const pagoId = pagoData.createPayment.idPago;
+    
+            const { data: anexoData } = await createAnexoAlumnosMutation({
+                variables: {
+                    cartaBuenaConducta: formValues.cartaBuenaConducta,
+                    certificadoPrimaria: formValues.certificadoPrimaria,
+                    curpAlumno: formValues.curpAlumno,
+                    actaNacimiento: formValues.actaNacimiento,
+                    observaciones: formValues.observaciones,
+                    cda: formValues.cda,
+                    autorizacionIrseSolo: formValues.autorizacionIrseSolo,
+                    autorizacionPublicitaria: formValues.autorizacionPublicitaria,
+                    atencionPsicologica: formValues.atencionPsicologica,
+                    padecimiento: formValues.padecimiento,
+                    usoAparatoAuditivo: formValues.usoAparatoAuditivo,
+                    usoDeLentes: formValues.usoDeLentes,
+                    lateralidad: formValues.lateralidad,
+                    idAlumno: formValues.idAlumno,
+                }
+            });
+    
+            const { data: inscripcionData } = await createInscripcionMutation({
+                variables: {
+                    factura: formValues.factura,
+                    tipoInscripcion: formValues.tipoInscripcion,
+                    modalidadPago: formValues.modalidadPago,
+                    idAlumno: formValues.idAlumno,
+                    idPago: pagoId,
+                    idUsuario: user.id,
+                }
+            });
+    
+
             setShowCreateModal(false);
-            refetch();
+
         } catch (error) {
-            console.error('Error al crear la inscripción:', error);
+            console.error("Error creando la inscripción:", error);
         }
     };
 
@@ -266,104 +364,15 @@ const CrudEnrollment = () => {
                     setShowDeleteModal(true);
                 }}
                 onAdd={() => setShowCreateModal(true)}
-                createModal={
-                    <div>
-                        <SearchableInput
-                            placeholder="Factura"
-                            value={formValues.factura}
-                            onChange={handleInputChange}
-                            id="createInputFactura"
-                            name="factura"
-                        />
-                        <Input
-                            placeholder="Alumno ID"
-                            value={formValues.idAlumno}
-                            onChange={handleInputChange}
-                            id="createInputAlumnoId"
-                            name="idAlumno"
-                        />
-                        <Input
-                            placeholder="Pago ID"
-                            value={formValues.idPago}
-                            onChange={handleInputChange}
-                            id="createInputPagoId"
-                            name="idPago"
-                        />
-                        <Input
-                            placeholder="Usuario ID"
-                            value={formValues.idUsuario}
-                            onChange={handleInputChange}
-                            id="createInputUsuarioId"
-                            name="idUsuario"
-                        />
-                        <Input
-                            placeholder="Modalidad de Pago"
-                            value={formValues.modalidadPago}
-                            onChange={handleInputChange}
-                            id="createInputModalidadPago"
-                            name="modalidadPago"
-                        />
-                        <Input
-                            placeholder="Tipo de Inscripción"
-                            value={formValues.tipoInscripcion}
-                            onChange={handleInputChange}
-                            id="createInputTipoInscripcion"
-                            name="tipoInscripcion"
-                        />
-                        <Button bg="#00BF63" text="Crear Inscripción" action={handleAdd} />
-                    </div>
-                }
             />
 
             {/* Modal para Crear */}
             {showCreateModal && 
                 <Modal isOpen={showCreateModal} title="Crear Inscripción" onClose={() => setShowCreateModal(false)}>
-                    <div>
-                        <Input
-                            placeholder="Factura"
-                            value={formValues.factura}
-                            onChange={handleInputChange}
-                            id="createInputFactura"
-                            name="factura"
-                        />
-                        <Input
-                            placeholder="Alumno ID"
-                            value={formValues.idAlumno}
-                            onChange={handleInputChange}
-                            id="createInputAlumnoId"
-                            name="idAlumno"
-                        />
-                        <Input
-                            placeholder="Pago ID"
-                            value={formValues.idPago}
-                            onChange={handleInputChange}
-                            id="createInputPagoId"
-                            name="idPago"
-                        />
-                        <Input
-                            placeholder="Usuario ID"
-                            value={formValues.idUsuario}
-                            onChange={handleInputChange}
-                            id="createInputUsuarioId"
-                            name="idUsuario"
-                        />
-                        <Input
-                            placeholder="Modalidad de Pago"
-                            value={formValues.modalidadPago}
-                            onChange={handleInputChange}
-                            id="createInputModalidadPago"
-                            name="modalidadPago"
-                        />
-                        <Input
-                            placeholder="Tipo de Inscripción"
-                            value={formValues.tipoInscripcion}
-                            onChange={handleInputChange}
-                            id="createInputTipoInscripcion"
-                            name="tipoInscripcion"
-                        />
-                        <Button bg="#00BF63" text="Crear Inscripción" action={handleAdd} />
-                    </div>
-                </Modal>
+                {currentStep === 1 && <PagoForm formValues={formValues} handleInputChange={handleInputChange} onNext={nextStep} />}
+                {currentStep === 2 && <InscripcionForm formValues={formValues} handleInputChange={handleInputChange} onNext={nextStep} onBack={prevStep} />}
+                {currentStep === 3 && <AnexoForm formValues={formValues} handleInputChange={handleInputChange} onSubmit={handleAdd} onBack={prevStep} />}
+            </Modal>
             }
 
             {/* Modal para Eliminar */}
