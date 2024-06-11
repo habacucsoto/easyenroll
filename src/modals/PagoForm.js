@@ -9,7 +9,7 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
         let error = '';
         switch (name) {
             case 'recibo':
-                if (!value) error = 'El recibo es obligatorio';
+                if (!value) error = 'El recibo debe ser una URL válida';
                 break;
             case 'descuento':
                 if (isNaN(value) || value < 0 || value > 100) error = 'El descuento debe ser un número entre 0 y 100';

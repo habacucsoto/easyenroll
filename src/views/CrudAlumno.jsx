@@ -6,7 +6,6 @@ import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useUser } from '../users/UserContext';
-import Checkbox from '../components/Checkbox';
 
 const GET_STUDENTS = gql`
     query {
@@ -243,8 +242,8 @@ const CrudAlumno = () => {
             correoInstitucional: '',
             curp: '',
             escuelaProcedencia: '',
-            gradoGrupoAsignado: '',
-            sexo: ''
+            gradoGrupoAsignado: '1A',
+            sexo: 'M'
         });
         setShowCreateModal(true);
     };    

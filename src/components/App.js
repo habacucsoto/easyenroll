@@ -40,7 +40,7 @@ const App = () => {
   return (
     <UserProvider>
       <UserInfo />
-      <div className="center w85">
+      <div className="center w100">
         {isLoggedIn && <Header text={`Hola, ${username}!`} isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
         {isLoggedIn && (
           <NavMenu

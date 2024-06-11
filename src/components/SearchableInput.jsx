@@ -1,4 +1,3 @@
-// SearchableInput.js
 import React, { useState, useEffect } from 'react';
 
 const SearchableInput = ({ placeholder, data, onFilteredData }) => {
