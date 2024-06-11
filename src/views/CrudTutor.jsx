@@ -249,6 +249,20 @@ const CrudTutor = () => {
         }
     };
 
+    const openCreateModal = () => {
+        setFormValues({
+            id: null,
+            nombrePadreTutor: '',
+            telefono: '',
+            curpTutor: '',
+            scanIne: '',
+            scanComprobanteDomicilio: '',
+            emailPadreTutor: '',
+            alumnoId: ''
+        });
+        setShowCreateModal(true);
+    };  
+
     const handleAdd = async () => {
         // Validación general antes de crear el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
@@ -335,7 +349,7 @@ const CrudTutor = () => {
                     setTutorToDelete(id);
                     setShowDeleteModal(true);
                 }}
-                onAdd={() => setShowCreateModal(true)} // Este es el botón de creación
+                onAdd={openCreateModal} // Este es el botón de creación
                 createModal={
                     showCreateModal && ( // Mostrar modal solo si showCreateModal es true
                         <Modal isOpen={showCreateModal} title="Crear Tutor" onClose={() => setShowCreateModal(false)}>

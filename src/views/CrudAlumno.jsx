@@ -236,6 +236,21 @@ const CrudAlumno = () => {
         }
     };
 
+    const openCreateModal = () => {
+        setFormValues({
+            id: null,
+            nombre: '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
+            correoInstitucional: '',
+            curp: '',
+            escuelaProcedencia: '',
+            gradoGrupoAsignado: '',
+            sexo: ''
+        });
+        setShowCreateModal(true);
+    };    
+
     const handleAdd = async () => {
         // Validación general antes de crear el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
@@ -322,7 +337,7 @@ const CrudAlumno = () => {
                     setStudentToDelete(id);
                     setShowDeleteModal(true);
                 }}
-                onAdd={() => setShowCreateModal(true)}
+                onAdd={openCreateModal}
                 createModal={
                     <div>
                         <Input
