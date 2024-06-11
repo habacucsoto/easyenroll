@@ -6,6 +6,7 @@ import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useUser } from '../users/UserContext';
+import Checkbox from '../components/Checkbox';
 
 const GET_STUDENTS = gql`
     query {
@@ -138,8 +139,8 @@ const CrudAlumno = () => {
         correoInstitucional: '',
         curp: '',
         escuelaProcedencia: '',
-        gradoGrupoAsignado: '',
-        sexo: ''
+        gradoGrupoAsignado: '1A',
+        sexo: 'M'
     });
 
     const [formErrors, setFormErrors] = useState({
@@ -149,6 +150,8 @@ const CrudAlumno = () => {
         correoInstitucional: '',
         curp: '',
         escuelaProcedencia: '',
+        grado: '',
+        grupo: '',
         gradoGrupoAsignado: '',
         sexo: ''
     });
@@ -252,9 +255,9 @@ const CrudAlumno = () => {
             console.error('Error en los campos del formulario');
             return;
         }
-
+        
         try {
-            await createStudent({ variables: formValues });
+            await createStudent({ variables: { ...formValues, gradoGrupoAsignado: `${(formValues.grado + formValues.grupo) || formValues.gradoGrupoAsignado}` } });
             setShowCreateModal(false);
             refetch();
         } catch (error) {
@@ -287,7 +290,7 @@ const CrudAlumno = () => {
         }
 
         try {
-            await modifyStudent({ variables: formValues });
+            await modifyStudent({ variables: { ...formValues, gradoGrupoAsignado: `${(formValues.grado + formValues.grupo) || formValues.gradoGrupoAsignado}` } });
             setShowEditModal(false);
             refetch();
         } catch (error) {
@@ -296,6 +299,7 @@ const CrudAlumno = () => {
     };
 
     const prepareEdit = (student) => {
+        const [grado, grupo] = student.gradoGrupoAsignado.split('');
         setFormValues({
             id: student.id,
             nombre: student.nombre,
@@ -304,6 +308,8 @@ const CrudAlumno = () => {
             correoInstitucional: student.correoInstitucional,
             curp: student.curp,
             escuelaProcedencia: student.escuelaProcedencia,
+            grado: grado,
+            grupo: grupo,
             gradoGrupoAsignado: student.gradoGrupoAsignado,
             sexo: student.sexo
         });
@@ -379,20 +385,36 @@ const CrudAlumno = () => {
                             id="createInputEscuelaProcedencia"
                             name="escuelaProcedencia"
                         />
-                        <Input
-                            placeholder="Grado y Grupo Asignado"
-                            value={formValues.gradoGrupoAsignado}
-                            onChange={handleInputChange}
-                            id="createInputGradoGrupoAsignado"
-                            name="gradoGrupoAsignado"
-                        />
-                        <Input
-                            placeholder="Sexo"
+                        <div className="grado-grupo">
+                            <select
+                                name="grado"
+                                value={formValues.grado}
+                                onChange={handleInputChange}
+                                defaultValue={"1"}
+                            >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select
+                                name="grupo"
+                                value={formValues.grupo}
+                                onChange={handleInputChange}
+                                defaultValue={"A"}
+                            >
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                            </select>
+                        </div>
+                        <select
+                            name="sexo"
                             value={formValues.sexo}
                             onChange={handleInputChange}
-                            id="createInputSexo"
-                            name="sexo"
-                        />
+                            defaultValue={"M"}
+                        >
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
                         <Button bg="#00BF63" text="Crear Alumno" action={handleAdd} />
                     </div>
                 }
@@ -532,20 +554,39 @@ const CrudAlumno = () => {
                             id="createInputEscuelaProcedencia"
                             name="escuelaProcedencia"
                         />
-                        <Input
-                            placeholder="Grado y Grupo Asignado"
-                            value={formValues.gradoGrupoAsignado}
-                            onChange={handleInputChange}
-                            id="createInputGradoGrupoAsignado"
-                            name="gradoGrupoAsignado"
-                        />
-                        <Input
-                            placeholder="Sexo"
-                            value={formValues.sexo}
-                            onChange={handleInputChange}
-                            id="createInputSexo"
-                            name="sexo"
-                        />
+                        <label htmlFor="">Grado y grupo</label>
+                        <div className="grado-grupo">
+                            <select
+                                name="grado"
+                                value={formValues.grado}
+                                onChange={handleInputChange}
+                                defaultValue={"1"}
+                            >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select
+                                name="grupo"
+                                value={formValues.grupo}
+                                onChange={handleInputChange}
+                                defaultValue={"A"}
+                            >
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                            </select>
+                            <br />
+                            <label htmlFor="">Sexo</label>
+                            <select
+                                name="sexo"
+                                value={formValues.sexo}
+                                onChange={handleInputChange}
+                                defaultValue={"M"}
+                            >
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
                         <Button bg="#00BF63" text="Crear Alumno" action={handleAdd} />
                     </div>
                 </Modal>
@@ -602,20 +643,39 @@ const CrudAlumno = () => {
                             id="editInputEscuelaProcedencia"
                             name="escuelaProcedencia"
                         />
-                        <Input
-                            placeholder="Grado y Grupo Asignado"
-                            value={formValues.gradoGrupoAsignado}
-                            onChange={handleInputChange}
-                            id="editInputGradoGrupoAsignado"
-                            name="gradoGrupoAsignado"
-                        />
-                        <Input
-                            placeholder="Sexo"
-                            value={formValues.sexo}
-                            onChange={handleInputChange}
-                            id="editInputSexo"
-                            name="sexo"
-                        />
+                        <label htmlFor="">Grado y grupo</label>
+                        <div className="grado-grupo">
+                            <select
+                                name="grado"
+                                value={formValues.grado}
+                                onChange={handleInputChange}
+                                defaultValue={"1"}
+                            >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select
+                                name="grupo"
+                                value={formValues.grupo}
+                                onChange={handleInputChange}
+                                defaultValue={"A"}
+                            >
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                            </select>
+                            <br />
+                            <label htmlFor="">Sexo</label>
+                            <select
+                                    name="sexo"
+                                    value={formValues.sexo}
+                                    onChange={handleInputChange}
+                                    defaultValue={"M"}
+                                >
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                            </select>
+                        </div>
                         <Button bg="#737373" text="Guardar Cambios" action={handleEdit} />
                     </div>
                 </Modal>
