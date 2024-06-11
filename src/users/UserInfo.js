@@ -26,10 +26,10 @@ const UserInfo = () => {
     }
   }, [data, setUser]);
 
-  if (loading) return null;  // No renderiza nada
-  if (error) return null;  // No renderiza nada
+  if (loading) return null; 
+  if (error) return null; 
 
-  return null;  // No renderiza nada
+  return null;
 };
 
 export default UserInfo;

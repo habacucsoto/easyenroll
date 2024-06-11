@@ -5,7 +5,6 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import SearchableInput from '../components/SearchableInput';
 import { useUser } from '../users/UserContext';
 import PagoForm from '../modals/PagoForm';
 import InscripcionForm from '../modals/InscripcionForm';
@@ -290,7 +289,6 @@ const CrudEnrollment = ({...props}) => {
                     idUsuario: user.id,
                 }
             });
-    
 
             setShowCreateModal(false);
             refetch();

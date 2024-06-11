@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import SearchableInput from '../components/SearchableInput';
-import Modal from '../components/Modal';
 import styles from '../styles/CrudView.module.css';
 
 const CrudView = ({ 
     title, 
-    data = [], 
-    onQuery, 
-    onView, 
+    data = [],
     onEdit, 
     onDelete, 
     onAdd,
-    createModal, 
-    deleteModal, 
-    editModal, 
-    readModal,
-    isParentTutor,
-    isEnrollment,
 }) => {
     const [filteredData, setFilteredData] = useState(data);
 

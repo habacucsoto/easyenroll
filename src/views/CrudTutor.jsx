@@ -4,7 +4,6 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
-import SearchableInput from '../components/SearchableInput';
 import gql from 'graphql-tag';
 import { useUser } from '../users/UserContext';
 
@@ -170,31 +169,26 @@ const CrudTutor = () => {
     }, [data]);
 
     const validateEmail = (email) => {
-        // Expresión regular para validar email
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
 
     const validateCurp = (curp) => {
-        // Expresión regular para validar CURP
         const regexCurp = /^[A-Z0-9]{18}$/;
         return regexCurp.test(curp);
     };
 
     const validateText = (value) => {
-        // Expresión regular para validar nombre con espacios
         const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/u;
         return regexNombre.test(value);
     };
 
     const validateTelefono = (value) => {
-        // Expresión regular para validar teléfono (exactamente 10 dígitos)
         const regexTelefono = /^\d{10}$/;
         return regexTelefono.test(value);
     };
 
     const validateEnlace = (value) => {
-        // Expresión regular para validar URL
         const regexEnlace = /^(ftp|http|https):\/\/[^ "]+\.[^ "]+$/;
         return regexEnlace.test(value);
     };
@@ -243,7 +237,6 @@ const CrudTutor = () => {
                     scanComprobanteDomicilio: validateEnlace(value) ? '' : 'El enlace debe ser una URL válida'
                 });
                 break;
-            // Puedes agregar más casos para otros campos aquí
             default:
                 break;
         }
@@ -264,7 +257,6 @@ const CrudTutor = () => {
     };  
 
     const handleAdd = async () => {
-        // Validación general antes de crear el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
         if (hasErrors) {
             console.error('Error en los campos del formulario');
@@ -295,11 +287,9 @@ const CrudTutor = () => {
     const handleView = async (nombre) => {
         setTutorToView(nombre);
         setShowViewModal(true);
-        //refetchView();
     };
 
     const handleEdit = async () => {
-        // Validación general antes de modificar el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
         if (hasErrors) {
             console.error('Error en los campos del formulario');
@@ -349,9 +339,9 @@ const CrudTutor = () => {
                     setTutorToDelete(id);
                     setShowDeleteModal(true);
                 }}
-                onAdd={openCreateModal} // Este es el botón de creación
+                onAdd={openCreateModal} 
                 createModal={
-                    showCreateModal && ( // Mostrar modal solo si showCreateModal es true
+                    showCreateModal && ( 
                         <Modal isOpen={showCreateModal} title="Crear Tutor" onClose={() => setShowCreateModal(false)}>
                             <div>
                                 <Input
@@ -554,7 +544,6 @@ const CrudTutor = () => {
                     </div>
                 </Modal>
             }
-
 
             {/* Modal para Editar */}
             {showEditModal &&

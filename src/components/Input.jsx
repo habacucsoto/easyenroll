@@ -1,7 +1,5 @@
-import { isDisabled } from '@testing-library/user-event/dist/utils';
 import React from 'react';
 
-// Componente InputReutilizable
 const Input = ({ placeholder, type = "text", value, onChange, id, name, isDisabled = false, error }) => {
     return (
         <div>

@@ -1,14 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=League+Gothic&family=League+Spartan:wght@400;700&display=swap');
 
-
-/* Reset de márgenes y paddings para el contenedor del login */
 .container * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Estilo general del contenedor principal del login */
 .container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -18,7 +15,6 @@
   background-color: #f0f0f0;
 }
 
-/* Contenedor del login */
 .loginContainer {
   background-color: #253064;
   width: 100%;
@@ -30,7 +26,6 @@
   color: white;
 }
 
-/* Encabezado */
 .header {
   margin-bottom: 20px;
 }
@@ -45,7 +40,6 @@
   font-family: 'League Spartan', sans-serif;
 }
 
-/* Formulario */
 .form {
   background-color: white;
   border-radius: 20px;
@@ -106,15 +100,11 @@
   margin-bottom: 10px;
 }
 
-/* Estilo para campos de entrada con error */
 .inputError {
   color: red;
   border: 1px solid red;
 }
 
-/* Media Queries */
-
-/* Estilos para dispositivos móviles */
 @media (max-width: 768px) {
   .header img {
     width: 80px;
@@ -134,7 +124,6 @@
   }
 }
 
-/* Estilos para dispositivos de escritorio */
 @media (min-width: 769px) {
   .loginContainer {
     max-width: 500px;

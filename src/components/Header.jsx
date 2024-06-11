@@ -3,20 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Header.module.css';
 
 const Header = ({ text, isLoggedIn, onLogout }) => {
-    const navigate = useNavigate(); // Obtener el objeto de navegación
+    const navigate = useNavigate();
 
     const handleLogoutClick = () => {
         onLogout();
-        // Limpiar el almacenamiento de sesión
         sessionStorage.clear();
-        // Redirigir al usuario a la página de inicio de sesión después de cerrar sesión
         navigate('/login');
-        // Refrescar la página
         window.location.reload();
     };
 
     if (!isLoggedIn) {
-        return null; // No renderizar el header si no hay sesión iniciada
+        return null;
     }
 
     return (

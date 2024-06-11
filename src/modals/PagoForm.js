@@ -24,7 +24,6 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) error = 'La fecha de pago debe ser en el formato AAAA-MM-DD';
                 break;
             case 'metodoPago':
-                // Aseguramos que el valor no sea undefined o null para evitar falsos positivos
                 if (value === undefined || value === null || value === '') {
                     error = 'El método de pago es obligatorio';
                 }
@@ -44,7 +43,6 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
     };
 
     const validate = () => {
-        const newErrors = {};
         let isValid = true;
         
         if (!validateField('recibo', formValues.recibo)) isValid = false;
@@ -118,7 +116,7 @@ const PagoForm = ({ formValues, handleInputChange, onNext }) => {
                 id="createInputMetodoPago"
                 name="metodoPago"
                 onChange={handleInputChangeWithValidation}
-                value={formValues.metodoPago || ''} // Usa '' como valor por defecto
+                value={formValues.metodoPago || ''}
             >
                 <option value="">Seleccione</option>
                 <option value="E">Efectivo</option>

@@ -5,7 +5,6 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import SearchableInput from '../components/SearchableInput';
 import { useUser } from '../users/UserContext';
 
 const GET_STUDENTS = gql`
@@ -175,19 +174,16 @@ const CrudAlumno = () => {
     }, [data]);
 
     const validateEmail = (email) => {
-        // Expresión regular para validar email
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
 
     const validateCurp = (curp) => {
-        // Expresión regular para validar CURP
         const regexCurp = /^[A-Z0-9]{18}$/;
         return regexCurp.test(curp);
     };
 
     const validateText = (value) => {
-        // Expresión regular para validar nombre con espacios
         const regexNombre = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/u;
         return regexNombre.test(value);
     };
@@ -230,7 +226,6 @@ const CrudAlumno = () => {
                     apellidoMaterno: validateText(value) ? '' : 'El texto debe contener solo letras y espacios'
                 });
                 break;
-            // Puedes agregar más casos para otros campos aquí
             default:
                 break;
         }
@@ -252,7 +247,6 @@ const CrudAlumno = () => {
     };    
 
     const handleAdd = async () => {
-        // Validación general antes de crear el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
         if (hasErrors) {
             console.error('Error en los campos del formulario');
@@ -283,11 +277,9 @@ const CrudAlumno = () => {
     const handleView = async (nombre) => {
         setStudentToView(nombre);
         setShowViewModal(true);
-//        refetchView();
     };
 
     const handleEdit = async () => {
-        // Validación general antes de modificar el alumno
         const hasErrors = Object.values(formErrors).some(error => error !== '');
         if (hasErrors) {
             console.error('Error en los campos del formulario');

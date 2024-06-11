@@ -4,7 +4,7 @@ import { useUser } from '../users/UserContext';
 const Home = () => {
   const { user } = useUser();
 
-  if (!user || !user.groups) return <p>Cargando...</p>; // Esperar a que los datos del usuario estén disponibles
+  if (!user || !user.groups) return <p>Cargando...</p>; 
 
   const name = user.firstName;
 

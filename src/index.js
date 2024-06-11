@@ -6,7 +6,6 @@ import { setContext } from '@apollo/client/link/context';
 import { AUTH_TOKEN } from './constants';
 import './styles/index.css';
 
-// 1
 import {
   ApolloProvider,
   ApolloClient,
@@ -14,7 +13,6 @@ import {
   InMemoryCache
 } from '@apollo/client';
 
-// 2
 const httpLink = createHttpLink({
   uri: 'http://localhost:8000/graphql/',
 });
@@ -22,17 +20,16 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem(AUTH_TOKEN);
   return {
-  headers: {
-  ...headers,
-  authorization: token ? `JWT ${token}` : ''
-  }
+    headers: {
+      ...headers,
+      authorization: token ? `JWT ${token}` : ''
+    }
   };
-  });
-// 3
+});
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache()
-  });
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -42,8 +39,3 @@ root.render(
     </ApolloProvider>
   </BrowserRouter>,
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-

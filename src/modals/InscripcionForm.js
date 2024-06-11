@@ -5,7 +5,6 @@ import Checkbox from '../components/Checkbox';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 
-// Query para obtener los alumnos por nombre
 const GET_STUDENT_BY_NAME = gql`
     query GetStudentByName($nombre: String!) {
         students(search: $nombre) {
@@ -28,7 +27,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
     const [selectedStudentName, setSelectedStudentName] = useState('');
 
     useEffect(() => {
-        // Asegura que haya un valor por defecto para modalidadPago si no está definido
         if (!formValues.modalidadPago) {
             handleInputChange({
                 target: {
@@ -37,7 +35,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 }
             });
         }
-        // Asegura que haya un valor por defecto para tipoInscripcion si no está definido
         if (!formValues.tipoInscripcion) {
             handleInputChange({
                 target: {
@@ -53,7 +50,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
         skip: !formValues.idAlumno
     });
 
-    // Maneja la selección de un alumno de la lista de sugerencias
     const handleSelectStudent = (studentId, studentName) => {
         handleInputChange({
             target: {
@@ -62,7 +58,7 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
             }
         });
         setSelectedStudentName(studentName);
-        setSuggestions([]); // Limpia las sugerencias después de seleccionar un alumno
+        setSuggestions([]);
     };
 
     const validateField = (name, value) => {
@@ -72,11 +68,9 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 if (!value) error = 'El nombre del alumno es obligatorio';
                 break;
             case 'modalidadPago':
-                // Validación específica para modalidadPago si es requerida
                 if (!value) error = 'La modalidad de pago es obligatoria';
                 break;
             case 'tipoInscripcion':
-                // Validación específica para tipoInscripcion si es requerida
                 if (!value) error = 'El tipo de inscripción es obligatorio';
                 break;
             default:
@@ -116,7 +110,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 value={selectedStudentName || formValues.idAlumno}
                 onChange={(e) => {
                     handleInputChangeWithValidation(e);
-                    // Realiza la búsqueda y actualiza las sugerencias
                     if (e.target.value) {
                         setSuggestions(data ? data.students : []);
                     } else {
@@ -124,7 +117,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                     }
                 }}
                 onFocus={() => {
-                    // Muestra las sugerencias cuando el campo recibe foco
                     if (formValues.idAlumno && data && data.students) {
                         setSuggestions(data.students);
                     }
@@ -133,7 +125,6 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 name="idAlumno"
             />
             {errors.idAlumno && <div style={{ color: 'red' }}>{errors.idAlumno}</div>}
-            {/* Muestra la lista de sugerencias si hay alguna */}
             {suggestions.length > 0 && (
                 <div>
                     {suggestions.map(student => (
@@ -160,21 +151,23 @@ const InscripcionForm = ({ formValues, handleInputChange, onNext, onBack, curren
                 name="modalidadPago"
                 value={formValues.modalidadPago}
                 onChange={handleInputChangeWithValidation}
-                defaultValue="12" // No se usa defaultValue, ya que value tiene prioridad
+                defaultValue="12" 
             >
                 <option value="">Modalidad</option>
                 <option value="12">12 meses</option>
                 <option value="10">10 meses</option>
             </select>
             {errors.modalidadPago && <div style={{ color: 'red' }}>{errors.modalidadPago}</div>}
+            
             <br />
+
             <label htmlFor="createInputTipoInscripcion">Tipo de Inscripción:</label>
             <select
                 id="createInputTipoInscripcion"
                 name="tipoInscripcion"
                 value={formValues.tipoInscripcion}
                 onChange={handleInputChangeWithValidation}
-                defaultValue="I" // No se usa defaultValue, ya que value tiene prioridad
+                defaultValue="I"
             >
                 <option value="">Tipo</option>
                 <option value="I">Inscripción</option>

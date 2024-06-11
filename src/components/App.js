@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Header from "./Header";
 import NavMenu from "./NavMenu";
-import CreateIne from "./CreateIne";
 import Login from "./Login";
 import Home from "./Home";
 import { UserProvider } from '../users/UserContext';
@@ -40,7 +39,7 @@ const App = () => {
 
   return (
     <UserProvider>
-      <UserInfo /> {/* Añade UserInfo aquí para cargar la información del usuario */}
+      <UserInfo />
       <div className="center w85">
         {isLoggedIn && <Header text={`Hola, ${username}!`} isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
         {isLoggedIn && (
@@ -56,7 +55,6 @@ const App = () => {
         <div className="ph3 pv1 background-gray">
           <Routes>
             <Route path="/" element={isLoggedIn ? <Navigate to="/home" /> : <Login onLogin={handleLogin} />} />
-            <Route path="/create" element={<CreateIne />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/home" element={<Home />} />
             <Route path="/alumno" element={<CrudAlumno />} />

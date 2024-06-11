@@ -23,7 +23,6 @@ const Login = ({ onLogin }) => {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
   const [login] = useMutation(LOGIN_MUTATION, {
     variables: {
       username: formState.username,
@@ -32,7 +31,7 @@ const Login = ({ onLogin }) => {
     onCompleted: ({ tokenAuth }) => {
       localStorage.setItem(AUTH_TOKEN, tokenAuth.token);
       navigate('/');
-      onLogin(formState.username); // Llama a la función onLogin aquí
+      onLogin(formState.username);
     },
     onError: () => {
       setErrorMessage('Verifica los datos ingresados');

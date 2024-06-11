@@ -1,5 +1,3 @@
-// Checkbox.jsx
-
 import React from 'react';
 
 const Checkbox = ({ id, name, checked, onChange, children }) => {
